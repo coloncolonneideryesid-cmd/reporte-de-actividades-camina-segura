@@ -1,0 +1,2477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Camina Segura — Reporte de Actividades</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+  --rojo: #C0392B;
+  --rojo-d: #96281B;
+  --rojo-l: #FDECEA;
+  --amarillo: #F39C12;
+  --amarillo-l: #FEF9E7;
+  --verde: #1A7A4A;
+  --verde-l: #E8F8F0;
+  --azul: #1A5276;
+  --azul-l: #EAF2FB;
+  --naranja: #CA6F1E;
+  --naranja-l: #FDF2E9;
+  --gris1: #1C2833;
+  --gris2: #2C3E50;
+  --gris3: #566573;
+  --gris4: #AEB6BF;
+  --gris5: #F2F3F4;
+  --blanco: #FFFFFF;
+  --borde: #D5D8DC;
+  --sombra: 0 2px 12px rgba(0,0,0,0.08);
+  --radio: 10px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #EAECEE;
+  color: var(--gris1);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── HEADER ── */
+.app-header {
+  background: var(--gris1);
+  padding: 0;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+.header-band {
+  background: var(--rojo);
+  height: 4px;
+}
+.header-inner {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 20px;
+}
+.header-logo {
+  width: 38px; height: 38px;
+  background: var(--rojo);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.header-text h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px; font-weight: 800;
+  color: white; letter-spacing: 0.3px;
+}
+.header-text p {
+  font-size: 11px; color: var(--gris4);
+  margin-top: 1px;
+}
+
+/* ── PROGRESS ── */
+.progress-bar-wrap {
+  background: rgba(255,255,255,0.08);
+  height: 3px;
+}
+.progress-bar-fill {
+  height: 3px;
+  background: var(--amarillo);
+  transition: width 0.4s ease;
+  width: 0%;
+}
+.progress-label {
+  padding: 6px 20px;
+  font-size: 11px;
+  color: var(--gris4);
+  display: flex; justify-content: space-between;
+}
+.progress-label span { color: var(--amarillo); font-weight: 600; }
+
+/* ── MAIN ── */
+.main-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 20px 12px 60px;
+}
+
+/* ── SECTION CARD ── */
+.form-section {
+  background: var(--blanco);
+  border-radius: var(--radio);
+  margin-bottom: 12px;
+  overflow: hidden;
+  box-shadow: var(--sombra);
+  border: 1px solid var(--borde);
+  display: none;
+  animation: fadeSlide 0.3s ease;
+}
+.form-section.visible { display: block; }
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.section-header {
+  padding: 14px 18px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid var(--gris5);
+}
+.section-icon {
+  width: 32px; height: 32px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 700;
+  color: var(--gris1);
+}
+.section-sub { font-size: 11px; color: var(--gris3); margin-top: 2px; }
+
+.section-body { padding: 16px 18px; }
+
+/* ── FIELD ── */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+
+.field-label {
+  display: block;
+  font-size: 12.5px; font-weight: 600;
+  color: var(--gris2);
+  margin-bottom: 6px;
+}
+.field-label .req { color: var(--rojo); margin-left: 2px; }
+.field-hint { font-size: 11px; color: var(--gris3); margin-top: 4px; }
+
+/* INPUTS */
+input[type=text], input[type=email], input[type=date],
+input[type=time], input[type=number],
+select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid var(--borde);
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--gris1);
+  background: var(--blanco);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--rojo);
+  box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
+}
+input.error, select.error, textarea.error {
+  border-color: var(--rojo);
+  background: var(--rojo-l);
+}
+textarea { resize: vertical; min-height: 80px; }
+
+/* SELECT arrow */
+.select-wrap { position: relative; }
+.select-wrap::after {
+  content: '▾';
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  color: var(--gris3); pointer-events: none; font-size: 12px;
+}
+.select-wrap select { padding-right: 30px; }
+
+/* TWO COL */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 480px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* RADIO / CHECK GROUPS */
+.option-group { display: flex; flex-direction: column; gap: 7px; }
+.option-group.inline { flex-direction: row; flex-wrap: wrap; gap: 7px; }
+
+.opt-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--borde);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--gris5);
+}
+.opt-item:hover { border-color: var(--rojo); background: var(--rojo-l); }
+.opt-item.selected { border-color: var(--rojo); background: var(--rojo-l); }
+.opt-item input[type=radio], .opt-item input[type=checkbox] {
+  width: 16px; height: 16px; min-width: 16px;
+  margin-top: 1px; cursor: pointer;
+  accent-color: var(--rojo);
+  border: none; background: none;
+  box-shadow: none; padding: 0;
+}
+.opt-item input:focus { box-shadow: none; }
+.opt-label { font-size: 13px; }
+.opt-label small { display: block; font-size: 11px; color: var(--gris3); margin-top: 1px; }
+
+/* CHIP CHECKBOXES */
+.chip-group { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  padding: 6px 12px;
+  border: 1.5px solid var(--borde);
+  border-radius: 20px;
+  font-size: 12px; font-weight: 500;
+  cursor: pointer; background: var(--gris5);
+  transition: all 0.15s; user-select: none;
+  display: inline-flex; align-items: center; gap: 5px;
+}
+.chip:hover { border-color: var(--rojo); background: var(--rojo-l); color: var(--rojo); }
+.chip.selected { border-color: var(--rojo); background: var(--rojo); color: white; }
+.chip input[type=checkbox] { display: none; }
+
+/* SUBSECTION conditional */
+.subsection {
+  background: var(--gris5);
+  border: 1.5px dashed var(--borde);
+  border-radius: 8px;
+  padding: 14px;
+  margin-top: 12px;
+  display: none;
+}
+.subsection.visible { display: block; }
+.subsection-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--gris3); margin-bottom: 12px;
+}
+
+/* INDICADORES */
+.ind-group { display: flex; flex-direction: column; gap: 6px; }
+.ind-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--borde);
+  border-radius: 7px;
+  cursor: pointer; background: white;
+  transition: all 0.15s;
+}
+.ind-item:hover { border-color: var(--verde); }
+.ind-item.checked { border-color: var(--verde); background: var(--verde-l); }
+.ind-check-box {
+  width: 18px; height: 18px; min-width: 18px;
+  border: 2px solid var(--borde);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  background: white; font-size: 12px; margin-top: 1px;
+  transition: all 0.15s;
+}
+.ind-item.checked .ind-check-box {
+  background: var(--verde); border-color: var(--verde); color: white;
+}
+.ind-info { flex: 1; }
+.ind-nombre { font-size: 12.5px; font-weight: 600; color: var(--gris1); line-height: 1.3; }
+.ind-meta { font-size: 11px; color: var(--gris3); margin-top: 2px; }
+.ind-periodo {
+  font-size: 10px; padding: 2px 7px;
+  border: 1px solid var(--borde); border-radius: 10px;
+  color: var(--gris3); background: white; white-space: nowrap;
+  align-self: flex-start; margin-top: 2px;
+}
+
+/* JERARQUIA BTNS */
+.jer-btns { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.jer-btn {
+  padding: 5px 14px; border-radius: 20px;
+  border: 1.5px solid var(--borde);
+  font-size: 11.5px; font-weight: 600;
+  cursor: pointer; background: white;
+  transition: all 0.15s;
+}
+.jer-btn.principal { border-color: var(--rojo); color: var(--rojo); }
+.jer-btn.principal.activo { background: var(--rojo); color: white; }
+.jer-btn.secundaria { border-color: var(--gris4); color: var(--gris3); }
+.jer-btn.secundaria.activo { background: var(--gris2); border-color: var(--gris2); color: white; }
+
+/* NAV BUTTONS */
+.nav-btns {
+  display: flex; gap: 10px; margin-top: 20px;
+  position: sticky; bottom: 0;
+  background: linear-gradient(transparent, #EAECEE 30%);
+  padding: 16px 0 8px;
+}
+.btn {
+  flex: 1; padding: 13px;
+  border-radius: 8px; border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-prev { background: white; border: 1.5px solid var(--borde); color: var(--gris3); flex: 0.4; }
+.btn-next { background: var(--rojo); color: white; }
+.btn-next:hover { background: var(--rojo-d); }
+.btn-submit { background: var(--verde); color: white; }
+.btn-submit:hover { background: #145C38; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* AREA COLOR BADGES */
+.area-seg { --area-c: var(--rojo); --area-l: var(--rojo-l); }
+.area-tc  { --area-c: var(--naranja); --area-l: var(--naranja-l); }
+.area-js  { --area-c: var(--azul); --area-l: var(--azul-l); }
+.area-conv{ --area-c: var(--verde); --area-l: var(--verde-l); }
+
+/* SUCCESS */
+.success-screen {
+  display: none;
+  text-align: center; padding: 40px 20px;
+}
+.success-screen.visible { display: block; }
+.success-icon { font-size: 56px; margin-bottom: 16px; }
+.success-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 22px; font-weight: 800; color: var(--verde);
+  margin-bottom: 8px;
+}
+.success-sub { color: var(--gris3); font-size: 14px; }
+.btn-nuevo {
+  margin-top: 24px;
+  padding: 12px 28px;
+  background: var(--rojo); color: white;
+  border: none; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px; font-weight: 600; cursor: pointer;
+}
+
+/* SPINNER */
+.spinner { display: none; text-align: center; padding: 20px; }
+.spinner.visible { display: block; }
+.spinner-ring {
+  width: 32px; height: 32px;
+  border: 3px solid var(--borde);
+  border-top-color: var(--rojo);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* FOTO CARDS */
+.foto-card {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 1;
+  background: var(--gris5);
+  border: 1.5px solid var(--borde);
+}
+.foto-card img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.foto-card .foto-del {
+  position: absolute; top: 4px; right: 4px;
+  width: 22px; height: 22px;
+  background: rgba(192,57,43,0.9);
+  border: none; border-radius: 50%;
+  color: white; font-size: 12px;
+  cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  font-weight: 700; line-height: 1;
+}
+.foto-card .foto-num {
+  position: absolute; bottom: 4px; left: 4px;
+  background: rgba(0,0,0,0.55);
+  color: white; font-size: 10px; font-weight: 700;
+  padding: 2px 6px; border-radius: 4px;
+}
+
+  background: var(--amarillo-l);
+  border: 1.5px solid var(--amarillo);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 16px;
+  font-size: 12.5px;
+}
+.config-panel strong { color: var(--naranja); }
+.config-panel input {
+  margin-top: 8px; font-size: 12px;
+  border-color: var(--amarillo);
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="app-header">
+  <div class="header-band"></div>
+  <div class="header-inner">
+    <div class="header-logo">🗺️</div>
+    <div class="header-text">
+      <h1>Camina Segura — Reporte de Actividades</h1>
+      <p>Alcaldía Local de San Cristóbal · PISCCJ 2024-2028</p>
+    </div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+  <div class="progress-label">
+    <span id="stepLabel">Paso 1 de 8</span>
+    <span id="pctLabel">0%</span>
+  </div>
+</div>
+
+<div class="main-wrap">
+
+  <!-- LOOKUP DE CÓDIGO -->
+  <div class="form-section visible" id="secLookup" style="border:2px solid var(--amarillo);background:var(--amarillo-l)">
+    <div class="section-header" style="background:var(--amarillo-l);border-bottom:1px solid #F5CBA7">
+      <div class="section-icon" style="background:var(--amarillo);font-size:18px">🔑</div>
+      <div>
+        <div class="section-title">¿Tienes código de agendamiento?</div>
+        <div class="section-sub">Escríbelo y el formulario se pre-llena solo</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <div style="flex:1">
+          <input type="text" id="codigoAgenda" placeholder="Ej: SC-20250318-042"
+            style="text-transform:uppercase;font-family:monospace;font-size:16px;letter-spacing:2px;font-weight:700"
+            oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <button type="button" id="btnBuscar" onclick="buscarActividad()"
+          style="padding:10px 18px;background:var(--amarillo);color:var(--gris1);border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">
+          🔍 Buscar
+        </button>
+      </div>
+      <div id="lookupStatus" style="margin-top:8px;font-size:12.5px;display:none"></div>
+      <!-- Preview de lo que se va a pre-llenar -->
+      <div id="lookupPreview" style="display:none;margin-top:12px;background:white;border-radius:8px;padding:12px;border:1px solid var(--borde)">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--verde);margin-bottom:8px">✅ Actividad encontrada — se pre-llenará:</div>
+        <div id="lookupPreviewContent" style="font-size:12.5px;color:var(--gris2);line-height:1.8"></div>
+        <button type="button" onclick="aplicarPrellenado()"
+          style="margin-top:10px;width:100%;padding:10px;background:var(--verde);color:white;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer">
+          ✅ Sí, usar estos datos y continuar
+        </button>
+        <button type="button" onclick="ignorarPrellenado()"
+          style="margin-top:6px;width:100%;padding:8px;background:none;border:1px solid var(--borde);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;color:var(--gris3)">
+          No tengo código / llenar manualmente
+        </button>
+      </div>
+      <div style="margin-top:10px">
+        <button type="button" onclick="ignorarPrellenado()"
+          style="background:none;border:none;font-size:12px;color:var(--gris3);cursor:pointer;padding:0;text-decoration:underline">
+          No tengo código — llenar el formulario manualmente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <form id="mainForm" onsubmit="return false;">
+
+  <!-- ═══ SECCIÓN 1: IDENTIFICACIÓN ═══ -->
+  <div class="form-section visible" id="sec1">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FDECEA">👤</div>
+      <div>
+        <div class="section-title">Identificación del Funcionario</div>
+        <div class="section-sub">Información básica de quien reporta</div>
+      </div>
+    </div>
+    <div class="section-body">
+
+      <!-- 1. ÁREA PRIMERO -->
+      <div class="field">
+        <label class="field-label">Área que lidera la actividad <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="area" required onchange="handleAreaChange()">
+            <option value="">— Seleccione —</option>
+            <option value="Seguridad">Seguridad</option>
+            <option value="Justicia Social">Justicia Social</option>
+            <option value="Gestores de Convivencia">Gestores de Convivencia</option>
+            <option value="Territorio Confiable">Territorio Confiable</option>
+            <option value="Tejido Social">Tejido Social</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 2. CORREO -->
+      <div class="field">
+        <label class="field-label">Correo electrónico <span class="req">*</span></label>
+        <input type="email" id="correo" placeholder="nombre@bogota.gov.co" required>
+      </div>
+
+      <!-- 3. NOMBRE FUNCIONARIO — condicional por área -->
+      <div class="field">
+        <label class="field-label">Nombre del funcionario que ejecutó la actividad <span class="req">*</span></label>
+
+        <!-- Seguridad → lista -->
+        <div id="func-seg" style="display:none">
+          <div class="select-wrap">
+            <select id="nombreFuncionarioSeg" onchange="syncNombreFuncionario(this)">
+              <option value="">— Seleccione funcionario —</option>
+              <option value="Carlos Alberto Meléndez Caicedo (Líder de Área)">⭐ Carlos Alberto Meléndez Caicedo — Líder de Área</option>
+              <option value="Ana María Urrea Bernal">Ana María Urrea Bernal</option>
+              <option value="Ana María Lipio Giraldo">Ana María Lipio Giraldo</option>
+              <option value="Julieth Daniela Moreno">Julieth Daniela Moreno</option>
+              <option value="Angie Catalina Dueñas Urbina">Angie Catalina Dueñas Urbina</option>
+              <option value="Andrés David Mancera Rojas">Andrés David Mancera Rojas</option>
+              <option value="Juan David Linares Garzón">Juan David Linares Garzón</option>
+              <option value="Ismael Enrique Sánchez Roncancio">Ismael Enrique Sánchez Roncancio</option>
+              <option value="Luis Hernando Borda Montoya">Luis Hernando Borda Montoya</option>
+              <option value="Héctor Gustavo Silva Hernández">Héctor Gustavo Silva Hernández</option>
+              <option value="Rosalba Daza Parra">Rosalba Daza Parra</option>
+              <option value="Ferney Vásquez Moreno">Ferney Vásquez Moreno</option>
+              <option value="Yina Paola Montealegre Rojas">Yina Paola Montealegre Rojas</option>
+              <option value="Olga Lucía Ladino Herrera">Olga Lucía Ladino Herrera</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Justicia Social → lista -->
+        <div id="func-just" style="display:none">
+          <div class="select-wrap">
+            <select id="nombreFuncionarioJust" onchange="syncNombreFuncionario(this)">
+              <option value="">— Seleccione funcionario —</option>
+              <option value="Jorge Mario Díaz (Líder de Área)">⭐ Jorge Mario Díaz — Líder de Área</option>
+              <option value="Daniel Felipe Galvis Walteros">Daniel Felipe Galvis Walteros</option>
+              <option value="Paula Alejandra Hernández Malaver">Paula Alejandra Hernández Malaver</option>
+              <option value="Juan Sebastián Arias Tirado">Juan Sebastián Arias Tirado</option>
+              <option value="Luz Stella Pelayo Salazar">Luz Stella Pelayo Salazar</option>
+              <option value="Yéssica Milena Garzón Ortega">Yéssica Milena Garzón Ortega</option>
+              <option value="Óscar Felipe Cortés Montenegro">Óscar Felipe Cortés Montenegro</option>
+              <option value="Heidy Tatiana Gordo">Heidy Tatiana Gordo</option>
+              <option value="Francisco Leonardo Rodríguez Peñaloza">Francisco Leonardo Rodríguez Peñaloza</option>
+              <option value="Juan Pablo Mahecha Hernández">Juan Pablo Mahecha Hernández</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Gestores de Convivencia → lista -->
+        <div id="func-conv" style="display:none">
+          <div class="select-wrap">
+            <select id="nombreFuncionarioConv" onchange="syncNombreFuncionario(this)">
+              <option value="">— Seleccione funcionario —</option>
+              <option value="Laura Milena Quintero (Gestores de Convivencia)">Laura Milena Quintero</option>
+              <option value="Otro - Gestores de Convivencia">Otro funcionario de Gestores</option>
+            </select>
+          </div>
+          <div class="field-hint" style="margin-top:6px">⚠️ Si su nombre no aparece, seleccione "Otro" y escríbalo en el campo siguiente.</div>
+          <input type="text" id="nombreFuncionarioConvLibre" placeholder="Escriba su nombre completo" style="margin-top:8px;display:none" onchange="syncNombreFuncionario(this)">
+        </div>
+
+        <!-- Territorio Confiable / Tejido Social / sin área → texto libre -->
+        <div id="func-libre" style="display:none">
+          <input type="text" id="nombreFuncionarioLibre" placeholder="Escriba su nombre completo" onchange="syncNombreFuncionarioLibre()">
+          <div class="field-hint" id="func-libre-hint"></div>
+        </div>
+
+        <!-- Campo oculto unificado que se envía -->
+        <input type="hidden" id="nombreFuncionario" value="">
+      </div>
+
+      <!-- Participantes adicionales -->
+      <div class="field">
+        <label class="field-label">Nombres de otros funcionarios que participaron</label>
+        <div class="field-hint" style="margin-bottom:6px">Se pre-llena desde el agendamiento — ajusta si es necesario</div>
+        <textarea id="otrosFuncionarios" placeholder="Ejemplo: Ana Urrea, Julieth Moreno" rows="2"></textarea>
+      </div>
+
+      <!-- TC: Tipo de Intervención (solo para TC) -->
+      <div class="subsection" id="subsec-tc">
+        <div class="subsection-title">🏘️ Territorio Confiable — Tipo de Intervención</div>
+        <div class="field">
+          <label class="field-label">Tipo de intervención TC <span class="req">*</span></label>
+          <div class="option-group" id="tcTipoGrp">
+            <label class="opt-item"><input type="radio" name="tcTipo" value="Actividad comunitaria"><span class="opt-label">Actividad comunitaria</span></label>
+            <label class="opt-item"><input type="radio" name="tcTipo" value="Intervención en parque"><span class="opt-label">Intervención en parque</span></label>
+            <label class="opt-item"><input type="radio" name="tcTipo" value="Diagnóstico territorial"><span class="opt-label">Diagnóstico territorial</span></label>
+            <label class="opt-item"><input type="radio" name="tcTipo" value="Taller de apropiación"><span class="opt-label">Taller de apropiación</span></label>
+            <label class="opt-item"><input type="radio" name="tcTipo" value="Embellecimiento"><span class="opt-label">Embellecimiento</span></label>
+            <label class="opt-item"><input type="radio" name="tcTipo" value="Evento masivo"><span class="opt-label">Evento masivo</span></label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 2: INFORMACIÓN GENERAL ═══ -->
+  <div class="form-section" id="sec2">
+    <div class="section-header">
+      <div class="section-icon" style="background:#EAF2FB">📋</div>
+      <div>
+        <div class="section-title">Información General de la Ejecución</div>
+        <div class="section-sub">Nombre, objetivo y contexto de la actividad</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label class="field-label">Esta actividad se enmarca en <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="enmarca" required>
+            <option value="">— Seleccione —</option>
+            <option value="Conflictividad (atención a punto crítico)">Conflictividad (punto crítico - mapa de calor)</option>
+            <option value="Entornos Inspiradores">Entornos Inspiradores (transformación de espacios)</option>
+            <option value="OKRs (cumplimiento de objetivos)">OKRs (objetivos y resultados clave)</option>
+            <option value="Seguimiento Estrategias PISCCJ">Seguimiento Estrategias PISCCJ</option>
+            <option value="Atención al Ciudadano">Atención al Ciudadano (PQRS o solicitudes)</option>
+            <option value="Royo Legendario">Royo Legendario (cultura ciudadana)</option>
+            <option value="Reuniones de Equipos">Reuniones de Equipos (coordinación interna)</option>
+            <option value="N/A">N/A</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Nombre de la actividad <span class="req">*</span></label>
+        <input type="text" id="nombreActividad" placeholder="Ej: Jornada de prevención de hurto" required>
+      </div>
+      <div class="field">
+        <label class="field-label">¿Qué se hizo? <span class="req">*</span></label>
+        <textarea id="queSehizo" placeholder="Descripción breve — máx. 300 caracteres" maxlength="300" required></textarea>
+        <div class="field-hint"><span id="qseCount">0</span>/300 caracteres</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Programa estratégico <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="programa" required>
+            <option value="">— Seleccione —</option>
+            <option value="Comunidad">Comunidad</option>
+            <option value="Entornos Escolares - Primera Infancia y Niñez (0-11)">Entornos Escolares - Primera Infancia (0-11 años)</option>
+            <option value="Entornos Escolares - Adolescencia (12-17)">Entornos Escolares - Adolescencia (12-17 años)</option>
+            <option value="Mujeres y Prevención de VBG">Mujeres y Prevención de VBG</option>
+            <option value="Propiedad Horizontal">Propiedad Horizontal</option>
+            <option value="IVC">Inspección, Vigilancia y Control (IVC)</option>
+            <option value="Ambiente y Gestión de Residuos">Ambiente y Gestión de Residuos</option>
+            <option value="Espacio Público y Parques">Espacio Público y Parques</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 3: UBICACIÓN ═══ -->
+  <div class="form-section" id="sec3">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E8F8F0">📍</div>
+      <div>
+        <div class="section-title">Ubicación de la Actividad</div>
+        <div class="section-sub">Fecha, hora y lugar exacto</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-label">Fecha <span class="req">*</span></label>
+          <input type="date" id="fecha" required>
+        </div>
+        <div class="field">
+          <label class="field-label">Hora <span class="req">*</span></label>
+          <input type="time" id="hora" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Duración aproximada <span class="req">*</span></label>
+        <div class="option-group inline" id="duracionGrp">
+          <label class="opt-item"><input type="radio" name="duracion" value="Menos de 1 hora"><span class="opt-label">< 1 hora</span></label>
+          <label class="opt-item"><input type="radio" name="duracion" value="1 a 2 horas"><span class="opt-label">1-2 h</span></label>
+          <label class="opt-item"><input type="radio" name="duracion" value="2 a 4 horas"><span class="opt-label">2-4 h</span></label>
+          <label class="opt-item"><input type="radio" name="duracion" value="Más de 4 horas"><span class="opt-label">> 4 h</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Dirección específica <span class="req">*</span></label>
+        <input type="text" id="direccion" placeholder="Ej: Calle 36G Sur #8F-15 Este" required>
+      </div>
+      <!-- UPZ CASCADE -->
+      <!-- GEORREFERENCIACIÓN -->
+      <div class="field">
+        <label class="field-label">Georreferenciación</label>
+        <div style="display:flex;gap:8px;align-items:flex-start">
+          <div style="flex:1">
+            <input type="text" id="geoCoords" placeholder="Ej: 4.5740° N, 74.0936° W" readonly>
+          </div>
+          <button type="button" onclick="captureGeo()" id="btnGeo"
+            style="padding:10px 14px;background:var(--azul);color:white;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">
+            📍 Capturar
+          </button>
+        </div>
+        <div class="field-hint" id="geoStatus">Presiona "Capturar" para registrar tu ubicación actual</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">UPZ <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="upz" required onchange="handleUPZChange()">
+            <option value="">— Seleccione UPZ —</option>
+            <option value="32 - San Blas">32 - San Blas</option>
+            <option value="33 - Sosiego">33 - Sosiego</option>
+            <option value="34 - 20 de Julio">34 - 20 de Julio</option>
+            <option value="50 - La Gloria">50 - La Gloria</option>
+            <option value="51 - Los Libertadores">51 - Los Libertadores</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" id="zonaField" style="display:none">
+        <label class="field-label">Zona <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="zona" required onchange="handleZonaChange()">
+            <option value="">— Seleccione Zona —</option>
+          </select>
+        </div>
+      </div>
+      <div class="field" id="barrioField" style="display:none">
+        <label class="field-label">Barrio <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="barrio" required>
+            <option value="">— Seleccione Barrio —</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Lugar / Tipo de establecimiento <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="lugar" required>
+            <option value="">— Seleccione —</option>
+            <option>Alcaldía Local - Atención al ciudadano</option>
+            <option>Colegios</option>
+            <option>Iglesias</option>
+            <option>Establecimientos de venta y consumo de licor</option>
+            <option>Otras actividades comerciales</option>
+            <option>Paraderos SITP o Estación Transmilenio</option>
+            <option>Parques</option>
+            <option>Salón Comunal - JAC</option>
+            <option>Puerta a Puerta</option>
+            <option>Voz a Voz</option>
+            <option>Ciclovías</option>
+            <option>Ancianatos</option>
+            <option>Jardines de primera infancia</option>
+            <option>Otro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 4: ENFOQUE PISCCJ ═══ -->
+  <div class="form-section" id="sec4">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FDECEA">🎯</div>
+      <div>
+        <div class="section-title">Enfoque PISCCJ</div>
+        <div class="section-sub">Clasificación estratégica de la actividad</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label class="field-label">Enfoque de la actividad <span class="req">*</span></label>
+        <div class="select-wrap">
+          <select id="enfoque" required onchange="handleEnfoque()">
+            <option value="">— Seleccione el enfoque —</option>
+            <option value="PREVENCIÓN">PREVENCIÓN — Actividades de sensibilización y reducción de riesgos</option>
+            <option value="CONTROL">CONTROL — Supervisión y mantenimiento del orden en zonas vulnerables</option>
+            <option value="INTERINSTITUCIONAL">INTERINSTITUCIONAL — Colaboración con otras entidades</option>
+            <option value="INTERGRUPAL">INTERGRUPAL — Coordinación interna dentro de la Alcaldía Local</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- PREVENCIÓN -->
+      <div class="subsection" id="sub-prev">
+        <div class="subsection-title">Actividad de Prevención</div>
+        <div class="select-wrap">
+          <select id="detPrev">
+            <option value="">— Seleccione actividad —</option>
+            <option>1. Jornadas de promoción de denuncia</option>
+            <option>2. Prevención de violencia basada en género</option>
+            <option>3. Ruta única atención a mujeres</option>
+            <option>4. Prevención del hurto</option>
+            <option>5. Prevención de violencias y delitos en niños, niñas y adolescentes</option>
+            <option>6. Comunicación para familias sobre violencia sexual y otras violencias</option>
+            <option>7. Acompañamiento en entrada y salida de estudiantes</option>
+            <option>8. Actividades pedagógicas para la prevención de violencias</option>
+            <option>9. Talleres de resolución de conflictos</option>
+            <option>10. Marcación de bicicletas</option>
+            <option>11. Frentes de seguridad</option>
+            <option>12. Instalación de alarmas</option>
+            <option>13. Instalación de alarmas comunitarias</option>
+            <option>14. Operativos Pólvora</option>
+            <option>15. Actividades comunitarias y/o Cine al parque</option>
+            <option>16. Difusión de información</option>
+            <option>17. Recorridos de verificación / solicitudes comunidad</option>
+            <option>18. Jornada de Prevención sobre el Consumo de SPA</option>
+            <option>N/A</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- CONTROL -->
+      <div class="subsection" id="sub-ctrl">
+        <div class="subsection-title">Actividad de Control</div>
+        <div class="select-wrap">
+          <select id="detCtrl">
+            <option value="">— Seleccione actividad —</option>
+            <option>1. Registro y control por incidencia de hurto de personas</option>
+            <option>2. Registro y control por incidencia de hurto de celulares</option>
+            <option>3. Registro y control en entornos del sistema integrado de transporte público</option>
+            <option>4. Registro y control en parques priorizados</option>
+            <option>5. Plan Navidad</option>
+            <option>6. Plan Guitarra</option>
+            <option>7. Movilizaciones, Bloqueos y Paros</option>
+            <option>8. Control en entornos educativos con presunto tráfico de estupefacientes "Plan Mochila"</option>
+            <option>9. IVC Espacio Público</option>
+            <option>10. IVC Bares</option>
+            <option>11. IVC Chatarrerías</option>
+            <option>12. IVC Hoteles y Moteles</option>
+            <option>13. IVC Construcciones</option>
+            <option>14. IVC Atracciones Mecánicas</option>
+            <option>15. IVC Comercio</option>
+            <option>16. IVC Celulares</option>
+            <option>17. IVC Veterinarias</option>
+            <option>18. IVC Talleres Mecánicos</option>
+            <option>19. IVC Cerros</option>
+            <option>20. IVC Parqueaderos</option>
+            <option>21. IVC Entornos Escolares</option>
+            <option>22. Recorridos de Territorio para Identificación de Problemáticas</option>
+            <option>23. Operativos con Movilidad</option>
+            <option>24. Operativos Espacio Público</option>
+            <option>25. Desmonte y Habitantes de Calle / Contaminación Visual / Ventas Informales</option>
+            <option>N/A</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- INTERINSTITUCIONAL -->
+      <div class="subsection" id="sub-inter">
+        <div class="subsection-title">Actividad Interinstitucional</div>
+        <div class="select-wrap">
+          <select id="detInter">
+            <option value="">— Seleccione actividad —</option>
+            <option>1. Megatomas</option>
+            <option>2. Intervenciones nocturnas para mitigar homicidios y lesiones personales</option>
+            <option>3. Intervenciones</option>
+            <option>4. Intervenciones nocturnas para el control de licores</option>
+            <option>5. Actividades de intervención migratoria</option>
+            <option>6. Recorridos inter-locales de seguridad</option>
+            <option>7. Jornadas de inspección, vigilancia y control</option>
+            <option>8. Caravanas por la vida (patrullajes mixtos)</option>
+            <option>9. Recorrido y apoyo a actividades de identificación de cambuches y/o CHC</option>
+            <option>10. Recorridos de Seguridad con Policía</option>
+            <option>11. Juntas Zonales de Seguridad</option>
+            <option>12. Ocupaciones Ilegales</option>
+            <option>13. Operativos con Policía</option>
+            <option>14. Capacitaciones Interinstitucionales</option>
+            <option>15. Reuniones de Coordinación</option>
+            <option>16. Mesas de Trabajo</option>
+            <option>N/A</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- INTERGRUPAL -->
+      <div class="subsection" id="sub-interg">
+        <div class="subsection-title">Actividad Intergrupal</div>
+        <div class="select-wrap">
+          <select id="detInterg">
+            <option value="">— Seleccione actividad —</option>
+            <option>1. Apoyo área administrativa</option>
+            <option>2. Apoyo otras áreas (recreación, cultura, otras)</option>
+            <option>3. Reunión de equipos</option>
+            <option>4. Apoyo Logístico</option>
+            <option>5. Reuniones de Planeación y Revisión</option>
+            <option>6. Tropa social</option>
+            <option>7. Operativos con Policía</option>
+            <option>8. Apoyo Logístico en Operativos</option>
+            <option>9. Sensibilización y Control en Comercio Formal</option>
+            <option>10. Reunión de equipo</option>
+            <option>11. Apoyo en Megatomas y Operativos Masivos</option>
+            <option>12. Recorridos de caracterización UPZ</option>
+            <option>N/A</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- LÍNEA ESTRATÉGICA -->
+      <div class="field" style="margin-top:16px">
+        <label class="field-label">Línea estratégica PISCCJ <span class="req">*</span></label>
+        <div class="chip-group" id="lineaEstrGrp">
+          <label class="chip"><input type="checkbox" name="lineaEstr" value="SEGURIDAD" onchange="handleLineaEstr()"><span>🔴 SEGURIDAD</span></label>
+          <label class="chip"><input type="checkbox" name="lineaEstr" value="CONVIVENCIA" onchange="handleLineaEstr()"><span>🟢 CONVIVENCIA</span></label>
+          <label class="chip"><input type="checkbox" name="lineaEstr" value="JUSTICIA" onchange="handleLineaEstr()"><span>🔵 JUSTICIA</span></label>
+          <label class="chip"><input type="checkbox" name="lineaEstr" value="TRANSVERSAL" onchange="handleLineaEstr()"><span>⚪ TRANSVERSAL</span></label>
+        </div>
+      </div>
+
+      <!-- SEGURIDAD sub -->
+      <div class="subsection" id="sub-seg-lineas">
+        <div class="subsection-title">🔴 Líneas Estratégicas de Seguridad</div>
+        <div class="field-hint" style="margin-bottom:10px">Selecciona y marca como Principal o Secundaria</div>
+        <div id="seg-lineas-container"></div>
+      </div>
+
+      <!-- CONVIVENCIA sub -->
+      <div class="subsection" id="sub-conv-lineas">
+        <div class="subsection-title">🟢 Líneas Estratégicas de Convivencia</div>
+        <div class="field-hint" style="margin-bottom:10px">Selecciona y marca como Principal o Secundaria</div>
+        <div id="conv-lineas-container"></div>
+      </div>
+
+      <!-- JUSTICIA sub -->
+      <div class="subsection" id="sub-just-lineas">
+        <div class="subsection-title">🔵 Líneas Estratégicas de Justicia</div>
+        <div class="field-hint" style="margin-bottom:10px">Selecciona y marca como Principal o Secundaria</div>
+        <div id="just-lineas-container"></div>
+      </div>
+
+      <div class="field" style="margin-top:16px">
+        <label class="field-label">Nivel de Priorización Política</label>
+        <div class="chip-group" id="prioridadGrp">
+          <label class="chip"><input type="checkbox" name="prioridad" value="Alcalde Local"><span>Alcalde Local</span></label>
+          <label class="chip"><input type="checkbox" name="prioridad" value="Edil(es)"><span>Edil(es)</span></label>
+          <label class="chip"><input type="checkbox" name="prioridad" value="Concejal(es)"><span>Concejal(es)</span></label>
+          <label class="chip"><input type="checkbox" name="prioridad" value="Congresista(s)"><span>Congresista(s)</span></label>
+          <label class="chip"><input type="checkbox" name="prioridad" value="Secretaría Distrital"><span>Secretaría Distrital</span></label>
+          <label class="chip"><input type="checkbox" name="prioridad" value="No aplica"><span>No aplica</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 5: ENTIDADES Y FUERZA PÚBLICA ═══ -->
+  <div class="form-section" id="sec5">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FEF9E7">🤝</div>
+      <div>
+        <div class="section-title">Entidades Participantes</div>
+        <div class="section-sub">Fuerza pública y articulación institucional</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <!-- Áreas Alcaldía -->
+      <div class="field">
+        <label class="field-label">Áreas de la Alcaldía Local <span class="req">*</span></label>
+        <div class="chip-group" id="areasAlcaldiaGrp">
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="Seguridad"><span>Seguridad</span></label>
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="Justicia Social"><span>Justicia Social</span></label>
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="IVC"><span>IVC</span></label>
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="Territorio Confiable"><span>Territorio Confiable</span></label>
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="Tejido Social"><span>Tejido Social</span></label>
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="Deportes"><span>Deportes</span></label>
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="Cultura"><span>Cultura</span></label>
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="Infraestructura"><span>Infraestructura</span></label>
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="Más Territorio"><span>Más Territorio</span></label>
+          <label class="chip"><input type="checkbox" name="areasAlcaldia" value="Ninguna"><span>Ninguna</span></label>
+        </div>
+      </div>
+      <!-- Secretarías -->
+      <div class="field">
+        <label class="field-label">Secretarías Distritales</label>
+        <div class="chip-group" id="secretariasGrp">
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDSCJ"><span>SDSCJ</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDCultura"><span>SDCultura</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDMujer"><span>SDMujer</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDDE"><span>SDDE</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDP"><span>SDP</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDMovilidad"><span>SDMovilidad</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDHábitat"><span>SDHábitat</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDSalud"><span>SDSalud</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDEducación"><span>SDEducación</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDA"><span>SDA</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDIS"><span>SDIS</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="SDGobierno"><span>SDGobierno</span></label>
+          <label class="chip"><input type="checkbox" name="secretarias" value="Ninguna"><span>Ninguna</span></label>
+        </div>
+      </div>
+      <!-- Otras entidades -->
+      <div class="field">
+        <label class="field-label">Otras Entidades</label>
+        <div class="chip-group">
+          <label class="chip"><input type="checkbox" name="otrasEntidades" value="Promo Ambiental"><span>Promo Ambiental</span></label>
+          <label class="chip"><input type="checkbox" name="otrasEntidades" value="UAESP"><span>UAESP</span></label>
+          <label class="chip"><input type="checkbox" name="otrasEntidades" value="CYPA"><span>CYPA</span></label>
+          <label class="chip"><input type="checkbox" name="otrasEntidades" value="DADEP"><span>DADEP</span></label>
+          <label class="chip"><input type="checkbox" name="otrasEntidades" value="TransMilenio"><span>TransMilenio</span></label>
+          <label class="chip"><input type="checkbox" name="otrasEntidades" value="Consorcio Express"><span>Consorcio Express</span></label>
+          <label class="chip"><input type="checkbox" name="otrasEntidades" value="JAC u Organizaciones Comunitarias"><span>JAC / Org. Comunitarias</span></label>
+          <label class="chip"><input type="checkbox" name="otrasEntidades" value="Artistas Locales"><span>Artistas Locales</span></label>
+          <label class="chip"><input type="checkbox" name="otrasEntidades" value="Ninguna"><span>Ninguna</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">N° de asistentes (funcionarios de entidades) <span class="req">*</span></label>
+        <div class="option-group inline" id="asistentesGrp">
+          <label class="opt-item"><input type="radio" name="asistentes" value="1 a 5"><span class="opt-label">1 a 5</span></label>
+          <label class="opt-item"><input type="radio" name="asistentes" value="5 a 12"><span class="opt-label">5 a 12</span></label>
+          <label class="opt-item"><input type="radio" name="asistentes" value="12 a 20"><span class="opt-label">12 a 20</span></label>
+          <label class="opt-item"><input type="radio" name="asistentes" value="20 o más"><span class="opt-label">20 o más</span></label>
+        </div>
+      </div>
+      <!-- FUERZA PÚBLICA -->
+      <div class="field">
+        <label class="field-label">¿Hubo acompañamiento de Fuerza Pública? <span class="req">*</span></label>
+        <div class="option-group inline" id="fuerzaPublicaGrp">
+          <label class="opt-item"><input type="radio" name="fuerzaPublica" value="Sí" onchange="handleFuerzaPublica()"><span class="opt-label">Sí</span></label>
+          <label class="opt-item"><input type="radio" name="fuerzaPublica" value="No" onchange="handleFuerzaPublica()"><span class="opt-label">No</span></label>
+        </div>
+      </div>
+      <!-- Condicional Fuerza Pública -->
+      <div class="subsection" id="sub-fp">
+        <div class="subsection-title">🚔 Resultados Operativos con Fuerza Pública</div>
+        <div class="field">
+          <label class="field-label">Tipo de acompañamiento <span class="req">*</span></label>
+          <div class="select-wrap">
+            <select id="tipoFP">
+              <option value="">— Seleccione —</option>
+              <option>Policía Nacional - Operativo de Control</option>
+              <option>Policía Nacional - Acompañamiento Preventivo</option>
+              <option>Policía Cívica - Sensibilización</option>
+              <option>Policía Cívica - Pedagogía en eventos</option>
+              <option>Policía Cívica - Acompañamiento de eventos</option>
+              <option>CAI Móvil</option>
+              <option>Grupo de Reacción Inmediata</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label class="field-label">N° armas incautadas</label>
+            <div class="option-group" id="armasGrp">
+              <label class="opt-item"><input type="radio" name="armas" value="0"><span class="opt-label">0</span></label>
+              <label class="opt-item"><input type="radio" name="armas" value="1-2"><span class="opt-label">1-2</span></label>
+              <label class="opt-item"><input type="radio" name="armas" value="3-5"><span class="opt-label">3-5</span></label>
+              <label class="opt-item"><input type="radio" name="armas" value="Más de 5"><span class="opt-label">+5</span></label>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field-label">N° ciudadanos requisados</label>
+            <div class="option-group" id="requisadosGrp">
+              <label class="opt-item"><input type="radio" name="requisados" value="0"><span class="opt-label">0</span></label>
+              <label class="opt-item"><input type="radio" name="requisados" value="1-10"><span class="opt-label">1-10</span></label>
+              <label class="opt-item"><input type="radio" name="requisados" value="11-30"><span class="opt-label">11-30</span></label>
+              <label class="opt-item"><input type="radio" name="requisados" value="Más de 30"><span class="opt-label">+30</span></label>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">¿Incautación de SPA o licor adulterado?</label>
+          <div class="option-group inline">
+            <label class="opt-item"><input type="radio" name="incautacion" value="Sí"><span class="opt-label">Sí</span></label>
+            <label class="opt-item"><input type="radio" name="incautacion" value="No"><span class="opt-label">No</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">¿Hubo capturas?</label>
+          <div class="option-group inline">
+            <label class="opt-item"><input type="radio" name="capturas" value="Sí"><span class="opt-label">Sí</span></label>
+            <label class="opt-item"><input type="radio" name="capturas" value="No"><span class="opt-label">No</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Observaciones del operativo policial <span class="req">*</span></label>
+          <textarea id="obsPolicial" placeholder="Describa los resultados del operativo" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 6: RESULTADOS E IMPACTO ═══ -->
+  <div class="form-section" id="sec6">
+    <div class="section-header">
+      <div class="section-icon" style="background:#E8F8F0">📊</div>
+      <div>
+        <div class="section-title">Resultados e Impacto</div>
+        <div class="section-sub">Alcance poblacional y caracterización</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label class="field-label">N° ciudadanos directamente atendidos <span class="req">*</span></label>
+        <div class="option-group" id="alcanceGrp">
+          <label class="opt-item"><input type="radio" name="alcance" value="1-10 personas"><span class="opt-label">1-10 personas</span></label>
+          <label class="opt-item"><input type="radio" name="alcance" value="11-25 personas"><span class="opt-label">11-25 personas</span></label>
+          <label class="opt-item"><input type="radio" name="alcance" value="26-50 personas"><span class="opt-label">26-50 personas</span></label>
+          <label class="opt-item"><input type="radio" name="alcance" value="51-100 personas"><span class="opt-label">51-100 personas</span></label>
+          <label class="opt-item"><input type="radio" name="alcance" value="101-200 personas"><span class="opt-label">101-200 personas</span></label>
+          <label class="opt-item"><input type="radio" name="alcance" value="Más de 200 personas"><span class="opt-label">Más de 200 personas</span></label>
+          <label class="opt-item"><input type="radio" name="alcance" value="No aplica"><span class="opt-label">No aplica (coordinación institucional)</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Caracterización de la población atendida <span class="req">*</span></label>
+        <div class="chip-group" id="poblacionGrp">
+          <label class="chip"><input type="checkbox" name="poblacion" value="Niños (0-11)"><span>Niños 0-11</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Adolescentes (12-17)"><span>Adolescentes 12-17</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Jóvenes (18-28)"><span>Jóvenes 18-28</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Adultos (29-59)"><span>Adultos 29-59</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Adultos mayores (60+)"><span>Adultos mayores 60+</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Población migrante"><span>Migrante</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Habitantes de calle"><span>Habitantes de calle</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Mujeres en situación de VBG"><span>Mujeres VBG</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="LGBTIQ+"><span>LGBTIQ+</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Personas con discapacidad"><span>Discapacidad</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Comerciantes / Tenderos"><span>Comerciantes</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Líderes comunitarios"><span>Líderes comunitarios</span></label>
+          <label class="chip"><input type="checkbox" name="poblacion" value="Población general"><span>Población general</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Nivel de participación comunitaria <span class="req">*</span></label>
+        <div class="option-group" id="participacionGrp">
+          <label class="opt-item"><input type="radio" name="participacion" value="NULA"><span class="opt-label">NULA — Comunidad ausente o apática</span></label>
+          <label class="opt-item"><input type="radio" name="participacion" value="BAJA"><span class="opt-label">BAJA — Asistieron pero poca interacción</span></label>
+          <label class="opt-item"><input type="radio" name="participacion" value="MEDIA"><span class="opt-label">MEDIA — Participación activa moderada</span></label>
+          <label class="opt-item"><input type="radio" name="participacion" value="ALTA"><span class="opt-label">ALTA — Gran interés y compromiso</span></label>
+          <label class="opt-item"><input type="radio" name="participacion" value="No aplica"><span class="opt-label">No aplica (solo institucional)</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Aspectos positivos identificados <span class="req">*</span></label>
+        <div class="chip-group" id="positivosGrp">
+          <label class="chip"><input type="checkbox" name="positivos" value="Buena apropiación comunitaria del espacio"><span>Apropiación comunitaria</span></label>
+          <label class="chip"><input type="checkbox" name="positivos" value="Liderazgos comunitarios activos"><span>Liderazgos activos</span></label>
+          <label class="chip"><input type="checkbox" name="positivos" value="JAC organizada y participativa"><span>JAC organizada</span></label>
+          <label class="chip"><input type="checkbox" name="positivos" value="Infraestructura en buen estado"><span>Buena infraestructura</span></label>
+          <label class="chip"><input type="checkbox" name="positivos" value="Presencia institucional visible"><span>Presencia institucional</span></label>
+          <label class="chip"><input type="checkbox" name="positivos" value="Comunidad organizada para convivencia"><span>Comunidad organizada</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Problemáticas identificadas <span class="req">*</span></label>
+        <div class="chip-group" id="problematicasGrp">
+          <label class="chip"><input type="checkbox" name="problematicas" value="Deterioro de infraestructura"><span>Deterioro infraestructura</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Presencia de economías ilegales"><span>Economías ilegales</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Expendios clandestinos de licor"><span>Expendios clandestinos</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Conflictos vecinales activos"><span>Conflictos vecinales</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Riñas o violencia evidente"><span>Riñas/violencia</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Población vulnerable sin atención"><span>Población vulnerable</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Ausencia de autoridad institucional"><span>Ausencia institucional</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Basuras y contaminación ambiental"><span>Basuras/contaminación</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Inseguridad percibida"><span>Inseguridad percibida</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Consumo de SPA visible"><span>Consumo SPA</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Microtráfico evidente"><span>Microtráfico</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Establecimientos sin licencias"><span>Sin licencias</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Ocupación indebida espacio público"><span>Ocupación espacio público</span></label>
+          <label class="chip"><input type="checkbox" name="problematicas" value="Ninguna problemática observada"><span>Ninguna</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Nivel de riesgo del territorio <span class="req">*</span></label>
+        <div class="option-group" id="riesgoGrp">
+          <label class="opt-item"><input type="radio" name="riesgo" value="BAJO"><span class="opt-label">BAJO — Zona tranquila</span></label>
+          <label class="opt-item"><input type="radio" name="riesgo" value="MEDIO"><span class="opt-label">MEDIO — Problemáticas aisladas</span></label>
+          <label class="opt-item"><input type="radio" name="riesgo" value="ALTO"><span class="opt-label">ALTO — Múltiples problemáticas concurrentes</span></label>
+          <label class="opt-item"><input type="radio" name="riesgo" value="CRÍTICO"><span class="opt-label">CRÍTICO — Alta conflictividad, atención urgente</span></label>
+          <label class="opt-item"><input type="radio" name="riesgo" value="No aplica"><span class="opt-label">No aplica</span></label>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label class="field-label">Percepción ANTES <span class="req">*</span></label>
+          <div class="select-wrap">
+            <select id="percepcionAntes" required>
+              <option value="">— Seleccione —</option>
+              <option>Muy inseguro</option>
+              <option>Inseguro</option>
+              <option>Neutro / No expresaron</option>
+              <option>Seguro</option>
+              <option>Muy seguro</option>
+              <option>No se midió</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Percepción DESPUÉS <span class="req">*</span></label>
+          <div class="select-wrap">
+            <select id="percepcionDespues" required>
+              <option value="">— Seleccione —</option>
+              <option>Empeoró</option>
+              <option>Igual</option>
+              <option>Mejoró levemente</option>
+              <option>Mejoró significativamente</option>
+              <option>No se midió</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 7: COMPROMISOS Y SEGUIMIENTO ═══ -->
+  <div class="form-section" id="sec7">
+    <div class="section-header">
+      <div class="section-icon" style="background:#FDF2E9">📌</div>
+      <div>
+        <div class="section-title">Compromisos y Seguimiento</div>
+        <div class="section-sub">Acuerdos generados y próximos pasos</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <div class="field">
+        <label class="field-label">Desarrollo de la actividad <span class="req">*</span></label>
+        <textarea id="desarrollo" placeholder="Describa brevemente cómo se desarrolló la actividad — máx. 500 caracteres" maxlength="500" required></textarea>
+        <div class="field-hint"><span id="devCount">0</span>/500 caracteres</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Observaciones evidenciadas en el territorio <span class="req">*</span></label>
+        <textarea id="observaciones" placeholder="¿Qué observó en campo?" required></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">¿Esta actividad atendió problemática previamente identificada? <span class="req">*</span></label>
+        <div class="option-group" id="diagPrevioGrp">
+          <label class="opt-item"><input type="radio" name="diagPrevio" value="Sí - Punto crítico en mapa de calor"><span class="opt-label">Sí — Punto crítico en mapa de calor</span></label>
+          <label class="opt-item"><input type="radio" name="diagPrevio" value="Sí - Reporte previo de la comunidad (PQRS)"><span class="opt-label">Sí — Reporte previo (PQRS)</span></label>
+          <label class="opt-item"><input type="radio" name="diagPrevio" value="Sí - Hallazgo de actividades anteriores"><span class="opt-label">Sí — Hallazgo de actividades anteriores</span></label>
+          <label class="opt-item"><input type="radio" name="diagPrevio" value="No - Actividad preventiva rutinaria"><span class="opt-label">No — Actividad preventiva rutinaria</span></label>
+          <label class="opt-item"><input type="radio" name="diagPrevio" value="No - Primera intervención en esta zona"><span class="opt-label">No — Primera intervención en esta zona</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">¿Se generaron compromisos? <span class="req">*</span></label>
+        <div class="option-group inline" id="compromisosGrp">
+          <label class="opt-item"><input type="radio" name="compromisos" value="Sí" onchange="handleCompromisos()"><span class="opt-label">Sí</span></label>
+          <label class="opt-item"><input type="radio" name="compromisos" value="No" onchange="handleCompromisos()"><span class="opt-label">No</span></label>
+        </div>
+      </div>
+      <div class="subsection" id="sub-compromisos">
+        <div class="subsection-title">Detalle de Compromisos</div>
+        <div class="field">
+          <label class="field-label">Tipos de compromisos</label>
+          <div class="chip-group">
+            <label class="chip"><input type="checkbox" name="tipoCompromisos" value="Comunidad"><span>Comunidad</span></label>
+            <label class="chip"><input type="checkbox" name="tipoCompromisos" value="Alcaldía Local"><span>Alcaldía Local</span></label>
+            <label class="chip"><input type="checkbox" name="tipoCompromisos" value="Entidades externas"><span>Entidades externas</span></label>
+            <label class="chip"><input type="checkbox" name="tipoCompromisos" value="Interinstitucionales"><span>Interinstitucionales</span></label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Describa los compromisos específicos <span class="req">*</span></label>
+          <textarea id="descCompromisos" placeholder="Liste cada compromiso, quién es responsable y para cuándo" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">¿Se requiere actividad de seguimiento? <span class="req">*</span></label>
+        <div class="option-group" id="seguimientoGrp">
+          <label class="opt-item"><input type="radio" name="seguimiento" value="Sí - menos de 1 mes"><span class="opt-label">Sí — en menos de 1 mes</span></label>
+          <label class="opt-item"><input type="radio" name="seguimiento" value="Sí - 1 a 3 meses"><span class="opt-label">Sí — en 1-3 meses</span></label>
+          <label class="opt-item"><input type="radio" name="seguimiento" value="Sí - seguimiento permanente"><span class="opt-label">Sí — seguimiento permanente</span></label>
+          <label class="opt-item"><input type="radio" name="seguimiento" value="No - actividad puntual"><span class="opt-label">No — actividad puntual</span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECCIÓN 8: EVIDENCIAS ═══ -->
+  <div class="form-section" id="sec8">
+    <div class="section-header">
+      <div class="section-icon" style="background:#EAF2FB">📸</div>
+      <div>
+        <div class="section-title">Evidencias y Envío</div>
+        <div class="section-sub">Fotos, videos y confirmación final</div>
+      </div>
+    </div>
+    <div class="section-body">
+      <!-- EVIDENCIAS FOTOGRÁFICAS — CÁMARA INTEGRADA -->
+      <div class="field">
+        <label class="field-label">Evidencias fotográficas <span class="req">*</span></label>
+        <div class="field-hint" style="margin-bottom:10px">Toma las fotos directamente desde el formulario — máximo 10 fotos</div>
+
+        <!-- Botones de captura -->
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+          <button type="button" onclick="abrirCamara()" id="btnCamara"
+            style="flex:1;min-width:140px;padding:12px;background:var(--azul);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+            📷 Tomar foto
+          </button>
+          <button type="button" onclick="subirGaleria()" id="btnGaleria"
+            style="flex:1;min-width:140px;padding:12px;background:var(--gris2);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+            🖼️ Subir desde galería
+          </button>
+        </div>
+
+        <!-- Input oculto para cámara -->
+        <input type="file" id="inputCamara" accept="image/*" capture="environment"
+          style="display:none" onchange="procesarFoto(this)">
+        <!-- Input oculto para galería -->
+        <input type="file" id="inputGaleria" accept="image/*" multiple
+          style="display:none" onchange="procesarFotosMultiples(this)">
+
+        <!-- Galería de fotos tomadas -->
+        <div id="fotoGaleria" style="display:none;margin-top:8px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gris3);margin-bottom:8px">
+            Fotos adjuntas (<span id="fotoContador">0</span>/10)
+          </div>
+          <div id="fotoGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"></div>
+        </div>
+
+        <!-- Mensaje vacío -->
+        <div id="fotoVacio" style="background:var(--gris5);border:2px dashed var(--borde);border-radius:8px;padding:24px;text-align:center;color:var(--gris4);font-size:13px">
+          📷 Sin fotos aún — usa los botones de arriba
+        </div>
+
+        <!-- Campo oculto con los datos base64 para envío -->
+        <input type="hidden" id="evidenciasData" value="">
+      </div>
+
+      <!-- RESUMEN FINAL -->
+      <div style="background:var(--gris5);border-radius:8px;padding:14px;margin-top:8px">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gris3);margin-bottom:10px">Resumen del registro</div>
+        <div id="resumenFinal" style="font-size:12.5px;color:var(--gris2);line-height:2"></div>
+      </div>
+
+      <div class="spinner" id="spinner">
+        <div class="spinner-ring"></div>
+        <div style="font-size:12px;color:var(--gris3)">Enviando a Google Sheets...</div>
+      </div>
+      <div id="errorMsg" style="display:none;background:var(--rojo-l);border:1px solid var(--rojo);border-radius:7px;padding:12px;font-size:12.5px;color:var(--rojo);margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- NAV BUTTONS -->
+  <div class="nav-btns">
+    <button type="button" class="btn btn-prev" id="btnPrev" onclick="prevStep()" style="display:none">← Atrás</button>
+    <button type="button" class="btn btn-next" id="btnNext" onclick="nextStep()">Siguiente →</button>
+    <button type="button" class="btn btn-submit" id="btnSubmit" style="display:none" onclick="submitForm()">✅ Enviar Reporte</button>
+  </div>
+
+  </form>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✅</div>
+    <div class="success-title">¡Reporte enviado!</div>
+    <div class="success-sub">Los datos quedaron registrados en Google Sheets<br>y estarán disponibles en Power BI en minutos.</div>
+    <div id="actaContainer" style="display:none;margin-top:20px">
+      <div style="background:#EAF2FB;border:1.5px solid var(--azul);border-radius:8px;padding:14px 16px;font-size:13px;color:var(--azul)">
+        📄 El acta se está generando automáticamente en Drive.<br>
+        <span style="font-size:12px;opacity:0.8">El link quedará guardado en el Sheet de Reportes, columna <strong>LINK_ACTA_PDF</strong>.</span>
+      </div>
+    </div>
+    <button class="btn-nuevo" onclick="resetForm()" style="margin-top:16px">+ Nuevo Reporte</button>
+  </div>
+
+
+</div><!-- end main-wrap -->
+
+<script>
+// ══════════════════════════════════════════════
+// UPZ → ZONA → BARRIO DATA
+// ══════════════════════════════════════════════
+const UPZ_DATA = {
+  // ── UPZ 32 · SAN BLAS ────────────────────────────────────────
+  '32 - San Blas': {
+    'Zona 1': [
+      'Aguas Claras','Amapolas','Amapolas II Sector','Arboleda de los Alpes',
+      'Balcones de San Pedro III','Buenavista II Sector','Buenavista Suroriental',
+      'Corinto','El Balcón de la Castaña','El Futuro','El Manantial',
+      'El Ramajal','El Ramajal San Pedro','El Tablón','El Triángulo',
+      'Granjas y Huertas El Ramajal','La Castaña','La Cecilia','La Gran Colombia',
+      'La Sagrada Familia','Las Acacias','Las Mercedes',
+      'Los Alpes (Agrupación de Vivienda)','Los Alpes del Zipa',
+      'Los Laureles Sur Oriental I Sector','Los Laureles Sur Oriental II Sector',
+      'Macarena de los Alpes','Manila','Manila 2','Montecarlo',
+      'Nueva España','Nueva España Parte Alta','Ramajal',
+      'S.C. Aguas Claras','S.C. El Triángulo','S.C. Hoya San Cristóbal',
+      'S.C. La Maria','S.C. Las Mercedes','S.C. Los Alpes',
+      'S.C. San Blas II','S.C. San Cristóbal Sur','S.C. Tibaque','S.C. Vitelma',
+      'San Blas','San Blas II Sector','San Cristóbal Alto','San Cristóbal Sur Viejo',
+      'San Jerónimo del Yuste','Torres de Gratamira','Triángulo Alto',
+      'Urb. Bosque de los Alpes','Urb. El Paseito I y III Sector',
+      'Urb. San Blas','Urb. Sidel','Vitelma'
+    ],
+    'Zona 2': [
+      'Altos de la Maria','Altos del Sol','Balkanes','Bellavista Sector Lucero',
+      'Bellavista Sur Oriental','Buenos Aires','Buenos Aires II Sector',
+      'Buenos Aires III Sector','Camino Viejo','Casapanda',
+      'Ciudad Marbella Sector II','El Rincón de la Victoria Bellavista',
+      'La Playa','Los Ángeles del Oriente','Los Balcanes Vitelma',
+      'Los Arrayanes Santa Inés','Los Dos Leones','Los Faroles de Santa Inés',
+      'Media Luna','S.C. Buenos Aires','S.C. La Maria','S.C. Santa Inés Sur',
+      'S.C. Vitelma','San Blas','San Blas II Sector','San Cristóbal Sur Viejo',
+      'San Pedro','San Vicente','San Vicente Sur Oriental',
+      'Santa Inés Sur','Santa Inés (El Topo)','Santa Sofía de Vitelma',
+      'Sidel - Terrazas de Oriente','Torres de Buenos Aires',
+      'Urb. Balcones de Provenza','Urb. Cerro San Vicente',
+      'Urb. Horacio Orjuela','Urb. La Herradura','Urb. Los Balkanes',
+      'Urb. San Juanito','Urb. San Vicente','Urb. Sidel',
+      'Vitelma','Vitelma Ciudadela Parque de la Roca'
+    ]
+  },
+  // ── UPZ 33 · SOSIEGO ─────────────────────────────────────────
+  '33 - Sosiego': {
+    'Zona 6': [
+      'Caja de Vivienda Popular','Camino Viejo de San Cristóbal',
+      'Ciudad Marbella Sector I','Ciudad Marbella Sector II',
+      'El Alto de las Brisas','El Alto de las Brisas II',
+      'El Diamante Bosque de San Cristóbal','El Parque Etapa I','El Sosiego',
+      'Nariño Sur','Primero de Mayo','Quinta Ramos',
+      'S.C. Buenos Aires','S.C. Calvo Sur','S.C. Las Brisas',
+      'S.C. Modelo Sur','S.C. Quinta Ramos','S.C. San Cristóbal Sur',
+      'S.C. San Javier','S.C. Velódromo','San Bernardo del Viento',
+      'San Cristóbal Sur Viejo','Santa Ana','Santa Ana Sur','Santa Anita',
+      'Tapas La Libertad','Urb. Caja Social de Ahorros San Cristóbal',
+      'Urb. Carrera 10a','Urb. Central','Urb. El Rincón de San Nicolás',
+      'Urb. Golconda','Urb. Loyola','Urb. Multifamiliar las Brisas',
+      'Urb. Parque Metropolitano Etapa II y III','Urb. San José 2',
+      'Urb. San José','Urb. Santa Margarita II',
+      'Velódromo','Villa Albania','Villa Javier'
+    ]
+  },
+  // ── UPZ 34 · 20 DE JULIO ─────────────────────────────────────
+  '34 - 20 de Julio': {
+    'Zona 4': [
+      'Atenas','Atenas I','Barcelona Sur Oriental',
+      'Bello Horizonte','Bello Horizonte II Sector','Bello Horizonte III Sector',
+      'Ciudadela Maria Micaela','Córdoba','El Angulo','El Encanto',
+      'El Refugio Sur','El Sosiego','Granada Sur','Granada Sur III Sector',
+      'La Joyita Bello Horizonte','Managua',
+      'S.C. 20 De Julio','S.C. Granada Sur',
+      'San Isidro','San Isidro Sur','San Isidro II','San Miguel Granada Sur',
+      'Suramérica','Unifamiliares Avenida Décima',
+      'Urb. Ayacucho Sur','Urb. Calima','Urb. La Coruña del Sur',
+      'Urb. Loyola','Urb. Montebello','Urb. Moore La Colina',
+      'Urb. Padua','Urb. Portal Real','Urb. Primero de Mayo',
+      'Urb. San Luis','Urb. Serafina',
+      'Villa de los Alpes','Villa de los Alpes II Sector','Villa Nataly 20 de Julio'
+    ]
+  },
+  // ── UPZ 50 · LA GLORIA ───────────────────────────────────────
+  '50 - La Gloria': {
+    'Zona 3': [
+      'Altamira Chiquita','Altamira Sector San José','Bellavista Sur Oriental',
+      'El Poblado','La Arboleda','La Gloria','La Grovana','La Nueva Gloria',
+      'Los Alpes del Zipa','Los Altos del Zuque','Los Puentes','Miraflores',
+      'Moralva','Panorama (Antes Altamira)','Puente Colorado',
+      'Quindío','Quindío II Sector',
+      'S.C. Altamira','S.C. La Gloria Oriental','S.C. Moralba',
+      'S.C. San José Sur Oriental','San José Oriental',
+      'Urb. Altos del Virrey','Urb. Colmena I Los Pinares','Urb. Continental',
+      'Urb. El Paseito I y III Sector','Urb. El Paseito II Sector',
+      'Urb. La Fortaleza','Urb. La Herradura','Urb. Prados de Altamira',
+      'Villa Anita Sur Oriental'
+    ],
+    'Zona 8': [
+      'Guacamayas III Sector','La Colmena','La Gloria','La Gloria Baja',
+      'La Victoria','La Victoria II Sector','La Victoria III Sector',
+      'Las Guacamayas','Malvinas',
+      'S.C. Bellavista Sur','S.C. La Gloria Oriental','S.C. La Victoria',
+      'San José Oriental','San José Sur Oriental','San Martín de Loba',
+      'Urb. El Rodeo','Urb. La Herradura'
+    ]
+  },
+  // ── UPZ 51 · LOS LIBERTADORES ────────────────────────────────
+  '51 - Los Libertadores': {
+    'Zona 5': [
+      'Bosque de San José','Ciudad de Londres',
+      'El Pinar República de Canadá II Sector','El Recodo República de Canadá',
+      'Juan Rey','Juan Rey II','La Arboleda','La Belleza',
+      'La Nueva Gloria','La Nueva Gloria II Sector',
+      'Los Libertadores','Los Libertadores Bosque Diamante Triángulo',
+      'Los Libertadores Sector El Tesoro','Los Libertadores Sector La Colina',
+      'Los Libertadores Sector San Ignacio','Los Libertadores Sector San Isidro',
+      'Los Libertadores Sector San José','Los Libertadores Sector San Luis',
+      'Los Libertadores Sector San Miguel',
+      'Los Pinos','Nueva Delly','Nueva Delly Parte Alta',
+      'República del Canadá El Pinar',
+      'S.C. Chiguaza','S.C. Ciudad Londres I','S.C. El Pinar',
+      'San Manuel','San Rafael Sur Oriental','Sierras del Sur Oriente',
+      'Urb. Colmena I Los Pinares','Urb. Las Gaviotas',
+      'Valparaíso','Villa Aurora','Villa Begonia'
+    ],
+    'Zona 7': [
+      'Canadá la Guira II Sector','Canadá San Luis',
+      'El Oasis del Sur','El Paraíso Sur Oriental I Sector',
+      'El Paraíso Urb. Antioquia',
+      'La Belleza','La Nueva Gloria','La Nueva Gloria II Sector',
+      'La Península','La Península El Paraíso','La Sierra',
+      'Los Libertadores','Nuevas Malvinas El Triunfo',
+      'S.C. Canadá o Guira','San Jacinto','Santa Helena',
+      'Santa Rita Sur Oriental','Santa Rita Sur Oriental II Etapa',
+      'Urb. Nueva Roma Oriental Dardanelos','Urb. Villa del Cerro',
+      'Villa Angélica (Canadá La Guira)','Villabel'
+    ]
+  }
+};
+
+// ══════════════════════════════════════════════
+// PISCCJ INDICADORES DATA
+// ══════════════════════════════════════════════
+const PISCCJ = {
+  SEGURIDAD: [
+    { nombre: 'Distritos Seguros', inds: [
+      { id:'S1', n:'Territorios caracterizados', m:'80 territorios · Trimestral' },
+      { id:'S2', n:'Territorios intervenidos interinstitucionalmente', m:'80 territorios · Trimestral' },
+      { id:'S3', n:'Entornos urbanos asegurados y estabilizados', m:'40 entornos · Trimestral' }
+    ]},
+    { nombre: 'Control Urbano', inds: [
+      { id:'S4', n:'Implementación del plan operativo', m:'100% plan anual · Trimestral' },
+      { id:'S5', n:'N° de acciones conjuntas en áreas críticas', m:'125 acciones al cuatrienio · Trimestral' }
+    ]},
+    { nombre: 'Seguridad Inteligente', inds: [
+      { id:'S6', n:'% cobertura videovigilancia', m:'50% cobertura total · Anual' },
+      { id:'S7', n:'N° de C2 locales implementados', m:'5 C2 · Anual' },
+      { id:'S8', n:'Centros de monitoreo locales', m:'6 centros · Anual' }
+    ]},
+    { nombre: 'Datos para la Seguridad', inds: [
+      { id:'S9', n:'Observatorio de Seguridad creado', m:'100% · Trimestral' },
+      { id:'S10', n:'Sistema de Información Integrado', m:'100% · Trimestral' }
+    ]},
+    { nombre: 'Cooperación Ciudadana', inds: [
+      { id:'S11', n:'Plan de Gestión Comunitaria implementado', m:'100% plan anual · Trimestral' }
+    ]},
+    { nombre: 'Protección de Infraestructura', inds: [
+      { id:'S12', n:'Infraestructuras críticas caracterizadas', m:'3/año · Semestral' },
+      { id:'S13', n:'Planes de protección de infraestructura', m:'3 planes/año · Semestral' }
+    ]},
+    { nombre: 'Transporte Seguro', inds: [
+      { id:'S14', n:'Acciones integradas seguridad-movilidad-infraestructura', m:'40 acciones/año · Trimestral' }
+    ]},
+    { nombre: 'Protección del Capital Natural', inds: [
+      { id:'S15', n:'Activos ambientales con vulnerabilidades caracterizadas', m:'Avance anual · Semestral' }
+    ]},
+    { nombre: 'Gestión Seguridad en Aglomeraciones', inds: [
+      { id:'S16', n:'Acciones interinstitucionales en aglomeraciones', m:'Plan anual · Trimestral' }
+    ]},
+    { nombre: 'Seguridad Regional', inds: [
+      { id:'S17', n:'Avance del marco normativo Metropolitano', m:'Plan Regional formulado · Anual' }
+    ]},
+    { nombre: 'Lucha Contra el Crimen', inds: [
+      { id:'S18', n:'Espacios de intercambio de información con fuerza pública', m:'Acciones plan · Trimestral' }
+    ]},
+    { nombre: 'Lucha Contra el Cibercrimen', inds: [
+      { id:'S19', n:'Acciones de prevención de cibercrimen', m:'Plan anual · Semestral' }
+    ]},
+    { nombre: 'Ciudadanías Seguras', inds: [
+      { id:'S20', n:'% avance estrategia pedagógica prevención de violencias', m:'100% anual · Trimestral' }
+    ]},
+    { nombre: 'Bienestar y Reconocimiento', inds: [
+      { id:'S21', n:'% bienes y servicios entregados a organismos de seguridad', m:'100% por vigencia · Semestral' }
+    ]},
+    { nombre: 'Urbanismo para la Seguridad', inds: [
+      { id:'S22', n:'Documentos de experiencias exitosas urbanísticas', m:'4 documentos/año · Anual' }
+    ]}
+  ],
+  CONVIVENCIA: [
+    { nombre: 'Entre todos ¡Transformamos la Convivencia!', inds: [
+      { id:'C1', n:'Documentos de sistematización de prácticas comunitarias', m:'1 documento anual' },
+      { id:'C2', n:'% nodos del Sistema Distrital de Convivencia fortalecidos', m:'80% nodos · Anual' },
+      { id:'C3', n:'N° intervenciones formativas en poblaciones priorizadas', m:'300/año · Anual' },
+      { id:'C4', n:'% programas comunitarios con ciudadanos con medidas correctivas', m:'Plan anual · Semestral' }
+    ]},
+    { nombre: '¡Con-VIVAMOS a lo bien!', inds: [
+      { id:'C5', n:'N° herramientas pedagógicas sobre conflictividad', m:'Plan anual · Anual' },
+      { id:'C6', n:'N° territorios con espacios pedagógicos de acuerdos', m:'10 territorios/año · Anual' }
+    ]},
+    { nombre: 'Eco-Sistema para la Convivencia', inds: [
+      { id:'C7', n:'N° encuentros distritales de diálogo e intercambio', m:'Plan anual · Anual' }
+    ]},
+    { nombre: 'Transformando-NOS', inds: [
+      { id:'C8', n:'Acciones restaurativas y apropiación CNSC', m:'Plan anual · Semestral' }
+    ]},
+    { nombre: 'Comuniquemos Convivencia', inds: [
+      { id:'C9', n:'N° mensajes en medios masivos y redes sociales', m:'60 mensajes/año · Anual' }
+    ]},
+    { nombre: 'Distrito Convivencia', inds: [
+      { id:'C10', n:'% acuerdos colaborativos interinstitucionales suscritos', m:'100% proyectados/año · Anual' }
+    ]}
+  ],
+  JUSTICIA: [
+    { nombre: 'El Cuento es Convivir', inds: [
+      { id:'J1', n:'Localidades beneficiadas por estrategia de redes', m:'15 localidades · Semestral' },
+      { id:'J2', n:'Acciones que fortalecen capacidades comunitarias', m:'25 acciones · Semestral' },
+      { id:'J3', n:'Iniciativas ciudadanas visibilizadas', m:'15 iniciativas · Semestral' }
+    ]},
+    { nombre: 'Distritos Proventivos', inds: [
+      { id:'J4', n:'Diagnósticos participativos en localidades priorizadas', m:'5 diagnósticos · Anual' },
+      { id:'J5', n:'Acciones formativas con organizaciones e instituciones educativas', m:'60 acciones · Semestral' },
+      { id:'J6', n:'Estrategias para prevención de VBG', m:'Plan anual · Semestral' }
+    ]},
+    { nombre: 'Regularse es la Jugada', inds: [
+      { id:'J7', n:'Acciones de resolución de conflictos con enfoque restaurativo', m:'Plan anual · Semestral' },
+      { id:'J8', n:'Estrategias de comprensión de justicia comunitaria', m:'15 estrategias · Semestral' },
+      { id:'J9', n:'Incentivos a procesos de justicia comunitaria', m:'3 incentivos · Semestral' }
+    ]},
+    { nombre: '¡Juntos Somos Más!', inds: [
+      { id:'J10', n:'% satisfacción necesidades de justicia', m:'60% · Anual' },
+      { id:'J11', n:'Actos administrativos Sistema Distrital de Justicia', m:'1 acto · Anual' },
+      { id:'J12', n:'Rutas de atención territorial y restaurativa', m:'25 rutas · Semestral' }
+    ]},
+    { nombre: 'Justicias en Plural', inds: [
+      { id:'J13', n:'Sedes Centro Distrital de Resolución de Conflictos', m:'6 sedes · Anual' },
+      { id:'J14', n:'Modelo de relacionamiento con actores de justicia', m:'100% · Semestral' },
+      { id:'J15', n:'Política Pública de Justicia Comunitaria', m:'100% · Trimestral' },
+      { id:'J16', n:'Jornadas de mediación restaurativa a Policía', m:'15 jornadas · Semestral' }
+    ]},
+    { nombre: 'Mujeres Vivas, Comunidades Seguras', inds: [
+      { id:'J17', n:'Estrategia prevención violencias en entornos comunitarios', m:'100% · Semestral' },
+      { id:'J18', n:'Implementación Ruta Mujer en Justicia Restaurativa', m:'100% · Semestral' },
+      { id:'J19', n:'Protocolo atención NNA víctimas violencia sexual', m:'100% · Semestral' },
+      { id:'J20', n:'Casas de Justicia con Ruta Mujer en operación', m:'13 casas · Anual' }
+    ]},
+    { nombre: 'Justicia RESTAURA-VIDAS', inds: [
+      { id:'J21', n:'Localidades con Localidades Restaurativas', m:'5 localidades · Semestral' },
+      { id:'J22', n:'Protocolos de Convivencia Escolar restaurativa', m:'5 protocolos · Anual' },
+      { id:'J23', n:'Rutas de Justicia Juvenil Restaurativa', m:'2 nuevas rutas · Semestral' },
+      { id:'J24', n:'Estrategias de sanciones no privativas de la libertad', m:'3 estrategias · Trimestral' },
+      { id:'J25', n:'Personas en Programa Justicia Restaurativa Adultos', m:'3.000 personas · Semestral' }
+    ]},
+    { nombre: 'Justicia que Transforma', inds: [
+      { id:'J26', n:'Modelo de Gestión Carcelaria implementado', m:'100% · Semestral' },
+      { id:'J27', n:'Estrategia conflictos restaurativos en Cárcel Distrital', m:'100% · Anual' },
+      { id:'J28', n:'Personas en estrategia mitigación SPA intramural', m:'400 personas · Semestral' }
+    ]},
+    { nombre: 'Casa y Libertad', inds: [
+      { id:'J29', n:'Modelo Atención Restaurativo Casa Libertad', m:'100% · Anual' },
+      { id:'J30', n:'Cursos complementarios a pospenados', m:'18 cursos · Semestral' },
+      { id:'J31', n:'Alianzas para empleabilidad pospenados', m:'6 alianzas · Anual' }
+    ]},
+    { nombre: '¡Al Derecho, a lo Bien!', inds: [
+      { id:'J32', n:'Estatuto de Conciliación implementado', m:'100% · Trimestral' },
+      { id:'J33', n:'Política Pública prevención vinculación NNAJ al delito', m:'100% · Semestral' },
+      { id:'J34', n:'Equipamientos de justicia nuevos', m:'10 equipamientos · Anual' },
+      { id:'J35', n:'Plan vinculación Comisarías al Sistema de Justicia', m:'100% · Trimestral' }
+    ]}
+  ]
+};
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let currentStep = 1;
+const TOTAL_STEPS = 8;
+const indState = {}; // indicatorId: true/false
+const jerState = {}; // lineaKey: 'principal'|'secundaria'|null
+
+// ══════════════════════════════════════════════
+// CONFIGURACIÓN — URLs del sistema (no editar)
+// ══════════════════════════════════════════════
+const SCRIPT_URL_AGENDAMIENTO = 'https://script.google.com/macros/s/AKfycbxCVgukuj_Mm6957fA6ePIjxbgaeiZmqZ79GttALf8Or_gHSFP9-31om6v0g1uA2BU/exec';
+const SCRIPT_URL_REPORTE      = 'https://script.google.com/macros/s/AKfycbwdMBde6cnajFdMosJptLeCFHPgglEFYEYNlZYzp06-Qf7wHCQ3E1S-TemlSFN1bUUm/exec';
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today date
+  document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+
+  // Character counters
+  document.getElementById('queSehizo').addEventListener('input', function() {
+    document.getElementById('qseCount').textContent = this.value.length;
+  });
+  document.getElementById('desarrollo').addEventListener('input', function() {
+    document.getElementById('devCount').textContent = this.value.length;
+  });
+
+  // ── Chip interactivity (prevent label double-fire)
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', (e) => {
+      e.preventDefault();
+      const cb = chip.querySelector('input[type=checkbox]');
+      if (cb) {
+        cb.checked = !cb.checked;
+        chip.classList.toggle('selected', cb.checked);
+        // fire any onchange handlers attached to the checkbox
+        cb.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+  });
+  document.querySelectorAll('.opt-item').forEach(item => {
+    const input = item.querySelector('input');
+    if (!input) return;
+    if (input.type === 'radio') {
+      input.addEventListener('change', () => {
+        document.querySelectorAll(`input[name="${input.name}"]`).forEach(r => {
+          r.closest('.opt-item')?.classList.remove('selected');
+        });
+        item.classList.add('selected');
+      });
+    } else {
+      input.addEventListener('change', () => item.classList.toggle('selected', input.checked));
+    }
+  });
+
+  buildLineaContainers();
+  updateProgress();
+});
+
+// ══════════════════════════════════════════════
+// BUILD LINEA CONTAINERS
+// ══════════════════════════════════════════════
+function buildLineaContainers() {
+  ['SEGURIDAD','CONVIVENCIA','JUSTICIA'].forEach(est => {
+    const id = est === 'SEGURIDAD' ? 'seg' : est === 'CONVIVENCIA' ? 'conv' : 'just';
+    const container = document.getElementById(`${id}-lineas-container`);
+    const color = est === 'SEGURIDAD' ? '#C0392B' : est === 'CONVIVENCIA' ? '#1A7A4A' : '#1A5276';
+    const colorL = est === 'SEGURIDAD' ? '#FDECEA' : est === 'CONVIVENCIA' ? '#E8F8F0' : '#EAF2FB';
+
+    PISCCJ[est].forEach((linea, li) => {
+      const lineaKey = `${id}-${li}`;
+      const div = document.createElement('div');
+      div.style.cssText = `border:1.5px solid #E0E0E0;border-radius:8px;margin-bottom:8px;overflow:hidden`;
+      div.id = `linea-card-${lineaKey}`;
+
+      div.innerHTML = `
+        <div onclick="toggleLineaCard('${lineaKey}')" style="padding:10px 12px;display:flex;align-items:center;gap:10px;cursor:pointer;background:#FAFAFA">
+          <div style="width:24px;height:24px;border-radius:5px;background:${color};color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">${li+1}</div>
+          <div style="flex:1;font-size:13px;font-weight:600">${linea.nombre}</div>
+          <div id="jer-badge-${lineaKey}" style="display:none;font-size:10px;padding:2px 8px;border-radius:10px;background:${colorL};color:${color};font-weight:600"></div>
+          <div id="arr-${lineaKey}" style="color:#aaa;font-size:12px">▾</div>
+        </div>
+        <div id="linea-body-${lineaKey}" style="display:none;padding:12px;border-top:1px solid #F0F0F0">
+          <div class="jer-btns">
+            <button type="button" class="jer-btn principal" id="jer-p-${lineaKey}" onclick="setJer('${lineaKey}','principal')">⭐ Principal</button>
+            <button type="button" class="jer-btn secundaria" id="jer-s-${lineaKey}" onclick="setJer('${lineaKey}','secundaria')">↩ Secundaria</button>
+          </div>
+          <div class="ind-group">
+            ${linea.inds.map(ind => `
+              <div class="ind-item" id="ind-${ind.id}" onclick="toggleInd('${ind.id}','${lineaKey}')">
+                <div class="ind-check-box" id="chk-${ind.id}"></div>
+                <div class="ind-info">
+                  <div class="ind-nombre">${ind.n}</div>
+                  <div class="ind-meta">📎 ${ind.m}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+  });
+}
+
+function toggleLineaCard(key) {
+  const body = document.getElementById(`linea-body-${key}`);
+  const arr = document.getElementById(`arr-${key}`);
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  arr.textContent = isOpen ? '▾' : '▴';
+}
+
+function setJer(key, tipo) {
+  jerState[key] = tipo;
+  ['principal','secundaria'].forEach(t => {
+    document.getElementById(`jer-${t[0]}-${key}`)?.classList.toggle('activo', t === tipo);
+  });
+  const badge = document.getElementById(`jer-badge-${key}`);
+  badge.style.display = 'inline';
+  badge.textContent = tipo === 'principal' ? '⭐ Principal' : '↩ Secundaria';
+  const card = document.getElementById(`linea-card-${key}`);
+  if (card) card.style.borderColor = tipo === 'principal' ? '#C0392B' : '#888';
+}
+
+function toggleInd(indId, lineaKey) {
+  indState[indId] = !indState[indId];
+  if (!indState[indId]) delete indState[indId];
+  const item = document.getElementById(`ind-${indId}`);
+  const chk = document.getElementById(`chk-${indId}`);
+  if (item) item.classList.toggle('checked', !!indState[indId]);
+  if (chk) chk.textContent = indState[indId] ? '✓' : '';
+  // Auto-assign secundaria if none set
+  if (indState[indId] && !jerState[lineaKey]) setJer(lineaKey, 'secundaria');
+}
+
+// ══════════════════════════════════════════════
+// CONDITIONAL LOGIC
+// ══════════════════════════════════════════════
+function handleAreaChange() {
+  const area = document.getElementById('area').value;
+
+  // Show/hide TC block
+  document.getElementById('subsec-tc').classList.toggle('visible', area === 'Territorio Confiable');
+
+  // Show correct staff selector
+  document.getElementById('func-seg').style.display   = area === 'Seguridad' ? 'block' : 'none';
+  document.getElementById('func-just').style.display  = area === 'Justicia Social' ? 'block' : 'none';
+  document.getElementById('func-conv').style.display  = area === 'Gestores de Convivencia' ? 'block' : 'none';
+  document.getElementById('func-libre').style.display = ['Territorio Confiable','Tejido Social',''].includes(area) ? 'block' : 'none';
+
+  // Hint text for free text
+  const hintEl = document.getElementById('func-libre-hint');
+  if (area === 'Territorio Confiable') hintEl.textContent = '(Territorio Confiable — escriba su nombre completo)';
+  else if (area === 'Tejido Social') hintEl.textContent = 'Tejido Social — N/A (los nombres se registran por separado)';
+  else hintEl.textContent = '';
+
+  // Reset hidden field
+  document.getElementById('nombreFuncionario').value = '';
+}
+
+function syncNombreFuncionario(sel) {
+  // For Gestores de Convivencia, if "Otro" is selected, show free-text field
+  if (sel.id === 'nombreFuncionarioConv') {
+    const libreConv = document.getElementById('nombreFuncionarioConvLibre');
+    if (sel.value === 'Otro - Gestores de Convivencia') {
+      libreConv.style.display = 'block';
+      libreConv.focus();
+      document.getElementById('nombreFuncionario').value = '';
+      return;
+    } else {
+      libreConv.style.display = 'none';
+    }
+  }
+  document.getElementById('nombreFuncionario').value = sel.value;
+}
+function syncNombreFuncionarioLibre() {
+  document.getElementById('nombreFuncionario').value = document.getElementById('nombreFuncionarioLibre').value;
+}
+
+function handleEnfoque() {
+  const val = document.getElementById('enfoque').value;
+  ['prev','ctrl','inter','interg'].forEach(k => {
+    document.getElementById(`sub-${k}`).classList.remove('visible');
+  });
+  const map = { 'PREVENCIÓN':'prev','CONTROL':'ctrl','INTERINSTITUCIONAL':'inter','INTERGRUPAL':'interg' };
+  if (map[val]) document.getElementById(`sub-${map[val]}`).classList.add('visible');
+}
+
+function captureGeo() {
+  const btn = document.getElementById('btnGeo');
+  const status = document.getElementById('geoStatus');
+  const input = document.getElementById('geoCoords');
+
+  if (!navigator.geolocation) {
+    status.textContent = '⚠️ Este dispositivo no soporta geolocalización.';
+    return;
+  }
+  btn.textContent = '⏳ Capturando...';
+  btn.disabled = true;
+  status.textContent = 'Obteniendo ubicación GPS...';
+
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const lat = pos.coords.latitude.toFixed(6);
+      const lng = pos.coords.longitude.toFixed(6);
+      const acc = Math.round(pos.coords.accuracy);
+      input.value = `${lat}, ${lng}`;
+      status.textContent = `✅ Ubicación capturada — precisión: ±${acc}m`;
+      status.style.color = 'var(--verde)';
+      btn.textContent = '🔄 Actualizar';
+      btn.disabled = false;
+    },
+    (err) => {
+      status.textContent = `⚠️ No se pudo capturar: ${err.message}. Verifique que el GPS esté activo.`;
+      status.style.color = 'var(--rojo)';
+      btn.textContent = '📍 Reintentar';
+      btn.disabled = false;
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+  );
+}
+
+function handleLineaEstr() {
+  const vals = [...document.querySelectorAll('input[name="lineaEstr"]:checked')].map(i => i.value);
+  document.getElementById('sub-seg-lineas').classList.toggle('visible', vals.includes('SEGURIDAD') || vals.includes('TRANSVERSAL'));
+  document.getElementById('sub-conv-lineas').classList.toggle('visible', vals.includes('CONVIVENCIA') || vals.includes('TRANSVERSAL'));
+  document.getElementById('sub-just-lineas').classList.toggle('visible', vals.includes('JUSTICIA') || vals.includes('TRANSVERSAL'));
+}
+
+function handleFuerzaPublica() {
+  const val = document.querySelector('input[name="fuerzaPublica"]:checked')?.value;
+  document.getElementById('sub-fp').classList.toggle('visible', val === 'Sí');
+}
+
+function handleCompromisos() {
+  const val = document.querySelector('input[name="compromisos"]:checked')?.value;
+  document.getElementById('sub-compromisos').classList.toggle('visible', val === 'Sí');
+}
+
+// ══════════════════════════════════════════════
+// UPZ CASCADE
+// ══════════════════════════════════════════════
+function handleUPZChange() {
+  const upz = document.getElementById('upz').value;
+  const zonaField = document.getElementById('zonaField');
+  const barrioField = document.getElementById('barrioField');
+  const zonaSelect = document.getElementById('zona');
+
+  if (!upz || !UPZ_DATA[upz]) {
+    zonaField.style.display = 'none';
+    barrioField.style.display = 'none';
+    return;
+  }
+  const zonas = Object.keys(UPZ_DATA[upz]);
+  zonaSelect.innerHTML = '<option value="">— Seleccione Zona —</option>';
+  zonas.forEach(z => {
+    const opt = document.createElement('option');
+    opt.value = z; opt.textContent = z;
+    zonaSelect.appendChild(opt);
+  });
+  zonaField.style.display = 'block';
+  barrioField.style.display = 'none';
+  document.getElementById('barrio').innerHTML = '<option value="">— Seleccione Barrio —</option>';
+}
+
+function handleZonaChange() {
+  const upz = document.getElementById('upz').value;
+  const zona = document.getElementById('zona').value;
+  const barrioField = document.getElementById('barrioField');
+  const barrioSelect = document.getElementById('barrio');
+
+  if (!upz || !zona || !UPZ_DATA[upz]?.[zona]) {
+    barrioField.style.display = 'none';
+    return;
+  }
+  const barrios = UPZ_DATA[upz][zona];
+  barrioSelect.innerHTML = '<option value="">— Seleccione Barrio —</option>';
+  barrios.forEach(b => {
+    const opt = document.createElement('option');
+    opt.value = b; opt.textContent = b;
+    barrioSelect.appendChild(opt);
+  });
+  barrioField.style.display = 'block';
+}
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function updateProgress() {
+  const pct = Math.round((currentStep / TOTAL_STEPS) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('stepLabel').textContent = `Paso ${currentStep} de ${TOTAL_STEPS}`;
+  document.getElementById('pctLabel').textContent = pct + '%';
+
+  // Show/hide sections
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
+    const sec = document.getElementById(`sec${i}`);
+    if (sec) sec.classList.toggle('visible', i === currentStep);
+  }
+
+  document.getElementById('btnPrev').style.display = currentStep > 1 ? 'block' : 'none';
+  document.getElementById('btnNext').style.display = currentStep < TOTAL_STEPS ? 'block' : 'none';
+  document.getElementById('btnSubmit').style.display = currentStep === TOTAL_STEPS ? 'block' : 'none';
+
+  if (currentStep === TOTAL_STEPS) buildResumen();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nextStep() {
+  if (!validateStep(currentStep)) return;
+  if (currentStep < TOTAL_STEPS) { currentStep++; updateProgress(); }
+}
+
+function prevStep() {
+  if (currentStep > 1) { currentStep--; updateProgress(); }
+}
+
+// ══════════════════════════════════════════════
+// VALIDATION
+// ══════════════════════════════════════════════
+function validateStep(step) {
+  const requiredIds = {
+    1: ['area','correo'],
+    2: ['nombreActividad','queSehizo','programa','enmarca'],
+    3: ['fecha','hora','direccion','upz','barrio','lugar'],
+    4: [],
+    5: [],
+    6: ['percepcionAntes','percepcionDespues'],
+    7: ['desarrollo','observaciones'],
+    8: []
+  };
+  let ok = true;
+  (requiredIds[step] || []).forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.value.trim()) {
+      el.classList.add('error');
+      el.addEventListener('input', () => el.classList.remove('error'), { once: true });
+      ok = false;
+    }
+  });
+  if (!ok) {
+    const firstErr = document.querySelector('.error');
+    firstErr?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  return ok;
+}
+
+// ══════════════════════════════════════════════
+// RESUMEN FINAL
+// ══════════════════════════════════════════════
+function buildResumen() {
+  const get = id => document.getElementById(id)?.value || '—';
+  const getRadio = name => document.querySelector(`input[name="${name}"]:checked`)?.value || '—';
+  const getChecks = name => [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(i => i.value).join(', ') || '—';
+  const lineaEstr = getChecks('lineaEstr');
+  const lineasSel = Object.entries(jerState).filter(([,v])=>v).length;
+  const indsSel = Object.keys(indState).length;
+
+  document.getElementById('resumenFinal').innerHTML = `
+    <b>👤 Funcionario:</b> ${get('nombreFuncionario')}<br>
+    <b>📋 Actividad:</b> ${get('nombreActividad')}<br>
+    <b>📅 Fecha:</b> ${get('fecha')} ${get('hora')}<br>
+    <b>📍 Ubicación:</b> ${get('upz')} · ${get('zona')} · ${get('barrio')}<br>
+    <b>🎯 Estrategia:</b> ${lineaEstr}<br>
+    <b>📊 Líneas PISCCJ:</b> ${lineasSel} seleccionadas · ${indsSel} indicadores<br>
+    <b>👥 Población atendida:</b> ${getRadio('alcance')}<br>
+    <b>🚔 Fuerza pública:</b> ${getRadio('fuerzaPublica')}<br>
+    <b>📌 Compromisos:</b> ${getRadio('compromisos')}
+  `;
+}
+
+// ══════════════════════════════════════════════
+// COLLECT DATA
+// ══════════════════════════════════════════════
+function collectData() {
+  const get = id => document.getElementById(id)?.value || '';
+  const getRadio = name => document.querySelector(`input[name="${name}"]:checked`)?.value || '';
+  const getChecks = name => [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(i => i.value).join(' | ');
+
+  // Build PISCCJ summary
+  const pisccjLines = [];
+  const pisccjInds = [];
+  Object.entries(jerState).forEach(([key, jer]) => {
+    const [est, idx] = key.split('-');
+    const estName = est === 'seg' ? 'SEGURIDAD' : est === 'conv' ? 'CONVIVENCIA' : 'JUSTICIA';
+    const linea = PISCCJ[estName]?.[parseInt(idx)];
+    if (linea) {
+      pisccjLines.push(`[${jer.toUpperCase()}] ${linea.nombre} (${estName})`);
+      linea.inds.forEach(ind => {
+        if (indState[ind.id]) pisccjInds.push(`${linea.nombre}: ${ind.n}`);
+      });
+    }
+  });
+
+  return {
+    MARCA_TEMPORAL: new Date().toLocaleString('es-CO'),
+    CODIGO_AGENDAMIENTO: document.getElementById('codigoAgenda')?.dataset?.aplicado || '',
+    CORREO: get('correo'),
+    NOMBRE_FUNCIONARIO: get('nombreFuncionario') || get('nombreFuncionarioLibre'),
+    AREA_LIDERA: get('area'),
+    TC_TIPO_INTERVENCION: getRadio('tcTipo'),
+    OTROS_FUNCIONARIOS: get('otrosFuncionarios'),
+    ENMARCA_EN: get('enmarca'),
+    NOMBRE_ACTIVIDAD: get('nombreActividad'),
+    QUE_SE_HIZO: get('queSehizo'),
+    PROGRAMA: get('programa'),
+    FECHA: get('fecha'),
+    HORA: get('hora'),
+    DURACION: getRadio('duracion'),
+    DIRECCION: get('direccion'),
+    GEOLOCALIZACION: get('geoCoords'),
+    UPZ: get('upz'),
+    ZONA: get('zona'),
+    BARRIO: get('barrio'),
+    LUGAR: get('lugar'),
+    ENFOQUE: get('enfoque'),
+    DET_PREVENCION: get('detPrev'),
+    DET_CONTROL: get('detCtrl'),
+    DET_INTERINSTITUCIONAL: get('detInter'),
+    DET_INTERGRUPAL: get('detInterg'),
+    LINEA_ESTRATEGICA: getChecks('lineaEstr'),
+    PISCCJ_LINEAS_JERARQUIA: pisccjLines.join(' || '),
+    PISCCJ_INDICADORES: pisccjInds.join(' || '),
+    PRIORIDAD_POLITICA: getChecks('prioridad'),
+    AREAS_ALCALDIA: getChecks('areasAlcaldia'),
+    SECRETARIAS: getChecks('secretarias'),
+    OTRAS_ENTIDADES: getChecks('otrasEntidades'),
+    N_ASISTENTES: getRadio('asistentes'),
+    FUERZA_PUBLICA: getRadio('fuerzaPublica'),
+    TIPO_ACOMP_FP: get('tipoFP'),
+    ARMAS_INCAUTADAS: getRadio('armas'),
+    CIUDADANOS_REQUISADOS: getRadio('requisados'),
+    INCAUTACION_SPA: getRadio('incautacion'),
+    CAPTURAS: getRadio('capturas'),
+    OBS_POLICIAL: get('obsPolicial'),
+    ALCANCE_POBLACIONAL: getRadio('alcance'),
+    POBLACION_ATENDIDA: getChecks('poblacion'),
+    NIVEL_PARTICIPACION: getRadio('participacion'),
+    ASPECTOS_POSITIVOS: getChecks('positivos'),
+    PROBLEMATICAS: getChecks('problematicas'),
+    NIVEL_RIESGO: getRadio('riesgo'),
+    PERCEPCION_ANTES: get('percepcionAntes'),
+    PERCEPCION_DESPUES: get('percepcionDespues'),
+    DESARROLLO_ACTIVIDAD: get('desarrollo'),
+    OBSERVACIONES: get('observaciones'),
+    DIAG_PREVIO: getRadio('diagPrevio'),
+    SE_GENERARON_COMPROMISOS: getRadio('compromisos'),
+    TIPO_COMPROMISOS: getChecks('tipoCompromisos'),
+    DESC_COMPROMISOS: get('descCompromisos'),
+    REQUIERE_SEGUIMIENTO: getRadio('seguimiento'),
+    EVIDENCIAS_NOMBRES: get('evidenciasData') || '[]',
+    N_FOTOS:            fotosArray.length
+  };
+}
+
+// ══════════════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════════════
+async function submitForm() {
+  const sheetUrl = SCRIPT_URL_REPORTE;
+  const data     = collectData();
+  data.FOTOS_BASE64 = fotosArray.map(f => f.dataUrl);
+
+  document.getElementById('spinner').classList.add('visible');
+  document.getElementById('btnSubmit').disabled = true;
+  document.getElementById('errorMsg').style.display = 'none';
+
+  try {
+    await fetch(sheetUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    document.getElementById('spinner').classList.remove('visible');
+    showSuccess();
+  } catch (err) {
+    document.getElementById('spinner').classList.remove('visible');
+    document.getElementById('btnSubmit').disabled = false;
+    const errEl = document.getElementById('errorMsg');
+    errEl.style.display = 'block';
+    errEl.textContent = 'Error al enviar: ' + err.message;
+  }
+}
+
+function showSuccess() {
+  document.getElementById('mainForm').style.display = 'none';
+  document.querySelectorAll('.nav-btns').forEach(el => el.style.display = 'none');
+  document.getElementById('successScreen').classList.add('visible');
+  // El acta se genera en Drive — el link queda en el Sheet columna LINK_ACTA_PDF
+  const actaContainer = document.getElementById('actaContainer');
+  if (actaContainer) actaContainer.style.display = 'block';
+}
+
+function resetForm() {
+  document.getElementById('mainForm').reset();
+  document.getElementById('mainForm').style.display = 'block';
+  document.querySelectorAll('.nav-btns').forEach(el => el.style.display = 'flex');
+  document.getElementById('secLookup').style.display = 'block';
+  document.getElementById('lookupPreview').style.display = 'none';
+  document.getElementById('lookupStatus').style.display = 'none';
+  document.getElementById('codigoAgenda').value = '';
+  fotosArray = [];
+  renderFotos();
+  _datosAgendados = null;
+  Object.keys(indState).forEach(k => delete indState[k]);
+  Object.keys(jerState).forEach(k => delete jerState[k]);
+  document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.opt-item.selected').forEach(o => o.classList.remove('selected'));
+  currentStep = 1;
+  updateProgress();
+}
+// ══════════════════════════════════════════════
+// CÁMARA / FOTOS INTEGRADAS
+// ══════════════════════════════════════════════
+const MAX_FOTOS = 10;
+let fotosArray = []; // { dataUrl, nombre }
+
+function abrirCamara() {
+  document.getElementById('inputCamara').click();
+}
+function subirGaleria() {
+  document.getElementById('inputGaleria').click();
+}
+
+function procesarFoto(input) {
+  if (!input.files || !input.files[0]) return;
+  comprimirYAgregar(input.files[0]);
+  input.value = ''; // reset para poder tomar otra foto seguida
+}
+
+function procesarFotosMultiples(input) {
+  if (!input.files) return;
+  const restantes = MAX_FOTOS - fotosArray.length;
+  const archivos  = Array.from(input.files).slice(0, restantes);
+  archivos.forEach(f => comprimirYAgregar(f));
+  input.value = '';
+}
+
+function comprimirYAgregar(file) {
+  if (fotosArray.length >= MAX_FOTOS) {
+    alert(`Máximo ${MAX_FOTOS} fotos por reporte.`);
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    // Comprimir via canvas a max 1200px y calidad 0.75
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 1200;
+      let { width, height } = img;
+      if (width > MAX || height > MAX) {
+        if (width > height) { height = Math.round(height * MAX / width); width = MAX; }
+        else                { width  = Math.round(width  * MAX / height); height = MAX; }
+      }
+      const canvas  = document.createElement('canvas');
+      canvas.width  = width;
+      canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
+      const nombre  = `foto_${Date.now()}_${fotosArray.length + 1}.jpg`;
+      fotosArray.push({ dataUrl, nombre });
+      renderFotos();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function eliminarFoto(idx) {
+  fotosArray.splice(idx, 1);
+  renderFotos();
+}
+
+function renderFotos() {
+  const grid    = document.getElementById('fotoGrid');
+  const vacio   = document.getElementById('fotoVacio');
+  const galeria = document.getElementById('fotoGaleria');
+  const counter = document.getElementById('fotoContador');
+
+  counter.textContent = fotosArray.length;
+  const hayFotos = fotosArray.length > 0;
+  vacio.style.display   = hayFotos ? 'none' : 'block';
+  galeria.style.display = hayFotos ? 'block' : 'none';
+
+  grid.innerHTML = fotosArray.map((f, i) => `
+    <div class="foto-card">
+      <img src="${f.dataUrl}" alt="Foto ${i+1}" loading="lazy">
+      <button type="button" class="foto-del" onclick="eliminarFoto(${i})" title="Eliminar">×</button>
+      <div class="foto-num">${i+1}</div>
+    </div>
+  `).join('');
+
+  // Deshabilitar botones si llegó al máximo
+  const lleno = fotosArray.length >= MAX_FOTOS;
+  document.getElementById('btnCamara').disabled  = lleno;
+  document.getElementById('btnGaleria').disabled = lleno;
+  if (lleno) {
+    document.getElementById('btnCamara').style.opacity  = '0.4';
+    document.getElementById('btnGaleria').style.opacity = '0.4';
+  } else {
+    document.getElementById('btnCamara').style.opacity  = '1';
+    document.getElementById('btnGaleria').style.opacity = '1';
+  }
+
+  // Actualizar campo oculto con JSON de nombres (los base64 se envían por separado)
+  document.getElementById('evidenciasData').value = JSON.stringify(fotosArray.map(f => f.nombre));
+}
+
+
+let _datosAgendados = null; // cache de lo que vino del Agendamiento
+
+async function buscarActividad() {
+  const codigo = document.getElementById('codigoAgenda').value.trim().toUpperCase();
+  const scriptUrl = SCRIPT_URL_AGENDAMIENTO;
+  const statusEl  = document.getElementById('lookupStatus');
+  const previewEl = document.getElementById('lookupPreview');
+  const btnBuscar = document.getElementById('btnBuscar');
+
+  if (!codigo) {
+    mostrarStatus('⚠️ Escribe el código primero (ej: SC-20250318-042)', 'warning');
+    return;
+  }
+
+  btnBuscar.textContent = '⏳ Buscando...';
+  btnBuscar.disabled = true;
+  previewEl.style.display = 'none';
+  mostrarStatus('Consultando el sistema de agendamiento...', 'info');
+
+  try {
+    const url = `${scriptUrl}?codigo=${encodeURIComponent(codigo)}`;
+    const resp = await fetch(url, { method: 'GET', mode: 'cors' });
+    const data = await resp.json();
+
+    if (data.status === 'ok') {
+      _datosAgendados = data;
+      mostrarPreview(data);
+      mostrarStatus('', 'ok');
+    } else if (data.status === 'not_found') {
+      mostrarStatus(`❌ No se encontró ninguna actividad con el código <strong>${codigo}</strong>. Verifica que esté bien escrito.`, 'error');
+    } else {
+      mostrarStatus(`⚠️ Error del servidor: ${data.msg}`, 'error');
+    }
+  } catch (err) {
+    // Intentar con no-cors como fallback (el Apps Script necesita CORS habilitado)
+    mostrarStatus(`⚠️ No se pudo conectar. Asegúrate de que el script esté desplegado con acceso "Cualquier persona". Error: ${err.message}`, 'error');
+  } finally {
+    btnBuscar.textContent = '🔍 Buscar';
+    btnBuscar.disabled = false;
+  }
+}
+
+function mostrarStatus(msg, tipo) {
+  const el = document.getElementById('lookupStatus');
+  if (!msg) { el.style.display = 'none'; return; }
+  el.style.display = 'block';
+  const colores = {
+    info:    'color:var(--azul)',
+    warning: 'color:var(--naranja)',
+    error:   'color:var(--rojo)',
+    ok:      'color:var(--verde)'
+  };
+  el.style.cssText = colores[tipo] || '';
+  el.innerHTML = msg;
+}
+
+function mostrarPreview(d) {
+  const previewEl  = document.getElementById('lookupPreview');
+  const contentEl  = document.getElementById('lookupPreviewContent');
+  previewEl.style.display = 'block';
+
+  // Resolver líneas activas
+  const lineas = [d.linea_seguridad, d.linea_convivencia, d.linea_justicia]
+    .filter(l => l && l !== 'N/A' && l.trim() !== '').join(' · ') || '—';
+
+  contentEl.innerHTML = `
+    <b>📋 Actividad:</b> ${d.nombre_actividad}<br>
+    <b>👤 Responsable:</b> ${d.responsable} (${d.equipo})<br>
+    <b>📅 Fecha:</b> ${d.fecha} ${d.hora}<br>
+    <b>📍 Ubicación:</b> ${d.upz} · ${d.zona} · ${d.barrio}<br>
+    <b>🎯 Enfoque:</b> ${d.enfoque}<br>
+    <b>📊 Líneas PISCCJ:</b> ${lineas}<br>
+    <b>🔖 Se enmarca en:</b> ${d.enmarca_en}
+  `;
+}
+
+function aplicarPrellenado() {
+  if (!_datosAgendados) return;
+  const d = _datosAgendados;
+
+  // Pre-llenar todos los campos posibles
+  setVal('correo',          d.correo);
+  setVal('nombreActividad', d.nombre_actividad);
+  setVal('queSehizo',       d.descripcion);
+  document.getElementById('qseCount').textContent = d.descripcion.length;
+  setVal('direccion',       d.direccion);
+  setVal('fecha',           d.fecha);
+  setVal('hora',            d.hora);
+
+  // Área → dispara la lógica condicional de funcionario
+  const areaEl = document.getElementById('area');
+  // Mapear nombres del Agendamiento → Reporte
+  const mapaArea = {
+    'gestores de orden':      'Gestores de Convivencia',
+    'gestores de convivencia':'Gestores de Convivencia',
+    'seguridad':              'Seguridad',
+    'justicia social':        'Justicia Social',
+    'territorio confiable':   'Territorio Confiable',
+    'tejido social':          'Tejido Social'
+  };
+  const areaNorm = (d.equipo || '').toLowerCase().trim();
+  const areaVal  = mapaArea[areaNorm] || '';
+  if (areaVal) {
+    areaEl.value = areaVal;
+    handleAreaChange();
+  }
+
+  // Pre-seleccionar nombre en la lista de funcionarios
+  // Nombre del funcionario — NO se pre-llena automáticamente porque el match
+  // por nombre puede ser incorrecto. El funcionario lo selecciona en el paso 1.
+  // El correo y el área sí se pre-llenan para orientar la selección.
+
+  // Enmarca en
+  setVal('enmarca', d.enmarca_en);
+
+  // Enfoque → dispara condicional
+  const enfoqueEl = document.getElementById('enfoque');
+  const mapaEnfoque = {
+    'prevención': 'PREVENCIÓN', 'prevencion': 'PREVENCIÓN',
+    'control':    'CONTROL',
+    'interinstitucional': 'INTERINSTITUCIONAL', 'interinstitucional - externa': 'INTERINSTITUCIONAL',
+    'intergrupal': 'INTERGRUPAL', 'intergrupal - interna': 'INTERGRUPAL'
+  };
+  const enfoqueNorm = (d.enfoque || '').toLowerCase().trim().split(':')[0].trim();
+  const enfoqueVal  = mapaEnfoque[enfoqueNorm] || '';
+  if (enfoqueVal) { enfoqueEl.value = enfoqueVal; handleEnfoque(); }
+
+  // UPZ → dispara cascade
+  const upzEl = document.getElementById('upz');
+  if (d.upz) {
+    // Normalize: strip leading zeros, extract digits
+    const upzNum = d.upz.replace(/\D/g, '').replace(/^0+/, '');
+    let matched = false;
+    for (let opt of upzEl.options) {
+      if (opt.value === '') continue;
+      const optNum = opt.value.split(' ')[0].replace(/^0+/, '');
+      if (optNum === upzNum) { upzEl.value = opt.value; matched = true; break; }
+    }
+    if (matched) {
+      handleUPZChange();
+      // Zona
+      setTimeout(() => {
+        const zonaEl = document.getElementById('zona');
+        if (zonaEl && d.zona) {
+          // Try exact match first, then normalized
+          const zonaNorm = d.zona.toLowerCase().trim();
+          let zonaMatched = false;
+          for (let opt of zonaEl.options) {
+            if (opt.value === '') continue;
+            if (opt.value.toLowerCase() === zonaNorm) { zonaEl.value = opt.value; zonaMatched = true; break; }
+          }
+          if (!zonaMatched) {
+            // Try number-only match: "Zona 1" ↔ "1"
+            const zonaDigits = zonaNorm.replace(/\D/g,'');
+            for (let opt of zonaEl.options) {
+              if (opt.value === '') continue;
+              if (opt.value.replace(/\D/g,'') === zonaDigits) { zonaEl.value = opt.value; zonaMatched = true; break; }
+            }
+          }
+          if (zonaMatched) {
+            handleZonaChange();
+            // Barrio
+            setTimeout(() => {
+              const barrioEl = document.getElementById('barrio');
+              if (barrioEl && d.barrio) {
+                const barrioNorm = d.barrio.toLowerCase().trim();
+                for (let opt of barrioEl.options) {
+                  if (opt.value === '') continue;
+                  if (opt.value.toLowerCase() === barrioNorm ||
+                      opt.value.toLowerCase().includes(barrioNorm) ||
+                      barrioNorm.includes(opt.value.toLowerCase())) {
+                    barrioEl.value = opt.value; break;
+                  }
+                }
+              }
+            }, 100);
+          }
+        }
+      }, 100);
+    }
+  }
+
+  // Líneas PISCCJ — marcar chips de estrategia
+  const estrategias = (d.estrategia || '').toLowerCase();
+  document.querySelectorAll('input[name="lineaEstr"]').forEach(cb => {
+    const val = cb.value.toLowerCase();
+    if (estrategias.includes(val)) {
+      cb.checked = true;
+      cb.closest('.chip')?.classList.add('selected');
+    }
+  });
+  handleLineaEstr();
+
+  // Otros funcionarios — col H del agendamiento (nombres de acompañantes)
+  if (d.otros_funcionarios && d.otros_funcionarios.trim()) {
+    setVal('otrosFuncionarios', d.otros_funcionarios);
+  }
+  document.getElementById('codigoAgenda').dataset.aplicado = _datosAgendados.codigo;
+
+  // Ocultar lookup, mostrar formulario desde paso 1
+  document.getElementById('secLookup').style.display = 'none';
+  currentStep = 1;
+  updateProgress();
+
+  // Feedback visual
+  const banner = document.createElement('div');
+  banner.style.cssText = 'background:var(--verde-l);border:1.5px solid var(--verde);border-radius:8px;padding:12px 16px;margin-bottom:12px;font-size:12.5px;color:var(--verde);font-weight:600;display:flex;align-items:center;gap:8px';
+  banner.innerHTML = `✅ Pre-llenado con código <strong style="font-family:monospace">${_datosAgendados.codigo}</strong> — Revisa los datos y completa el resto`;
+  document.querySelector('.main-wrap').insertBefore(banner, document.getElementById('mainForm'));
+  setTimeout(() => banner.remove(), 8000);
+}
+
+function ignorarPrellenado() {
+  document.getElementById('secLookup').style.display = 'none';
+  currentStep = 1;
+  updateProgress();
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el && val) el.value = val;
+}
+
+// Enter en el campo de código → buscar
+document.addEventListener('DOMContentLoaded', () => {
+  const inp = document.getElementById('codigoAgenda');
+  if (inp) inp.addEventListener('keydown', e => { if (e.key === 'Enter') buscarActividad(); });
+});
+
+</script>
+</body>
+</html>
