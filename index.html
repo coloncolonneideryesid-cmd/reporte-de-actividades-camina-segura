@@ -1605,8 +1605,8 @@ const jerState = {};
 // ══════════════════════════════════════════════
 // CONFIGURACIÓN — URLs del sistema
 // ══════════════════════════════════════════════
-const SCRIPT_URL_AGENDAMIENTO = 'https://script.google.com/macros/s/AKfycbw7QvYyGfg1hgeeTGPh3I38I285qPeR-uSb4tEGbjQDwBg-bs4hqF4gXkdUff_IUH0/exec';
-const SCRIPT_URL_REPORTE      = 'https://script.google.com/macros/s/AKfycbw7QvYyGfg1hgeeTGPh3I38I285qPeR-uSb4tEGbjQDwBg-bs4hqF4gXkdUff_IUH0/exec';
+const SCRIPT_URL_AGENDAMIENTO = 'https://script.google.com/macros/s/AKfycbzEbcl5LAw2icXkjYFn6WN_4pfotKukilNWgAh5y3qHDkgdZpPgV43SzXEOomAJ4N8e/exec';
+const SCRIPT_URL_REPORTE      = 'https://script.google.com/macros/s/AKfycbzEbcl5LAw2icXkjYFn6WN_4pfotKukilNWgAh5y3qHDkgdZpPgV43SzXEOomAJ4N8e/exec';
 
 // ══════════════════════════════════════════════
 // INIT
@@ -2011,24 +2011,27 @@ function collectData() {
 }
 
 // ══════════════════════════════════════════════
-// ✅ FIX PRINCIPAL: Content-Type cambiado a text/plain
-// para que no se bloquee con no-cors
+// SUBMIT — envío robusto a Google Apps Script
 // ══════════════════════════════════════════════
 async function submitForm() {
   const sheetUrl = SCRIPT_URL_REPORTE;
   const data     = collectData();
   data.FOTOS_BASE64 = fotosArray.map(f => f.dataUrl);
+  data.N_FOTOS = fotosArray.length;
 
   document.getElementById('spinner').classList.add('visible');
   document.getElementById('btnSubmit').disabled = true;
   document.getElementById('errorMsg').style.display = 'none';
 
+  const payload = JSON.stringify(data);
+  console.log('Payload size: ~' + Math.round(payload.length/1024) + ' KB | Fotos: ' + fotosArray.length);
+
   try {
     await fetch(sheetUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' }, // ✅ FIX: era 'application/json' — eso bloqueaba el envío
-      body: JSON.stringify(data)
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body:    payload
     });
     document.getElementById('spinner').classList.remove('visible');
     showSuccess();
@@ -2037,7 +2040,8 @@ async function submitForm() {
     document.getElementById('btnSubmit').disabled = false;
     const errEl = document.getElementById('errorMsg');
     errEl.style.display = 'block';
-    errEl.textContent = 'Error al enviar: ' + err.message;
+    errEl.innerHTML = '<b>⚠️ Error al enviar:</b> ' + err.message + '<br><small>Verifica tu conexión e intenta de nuevo.</small>';
+    console.error('submitForm error:', err);
   }
 }
 
