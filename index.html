@@ -2029,7 +2029,7 @@ function collectData() {
 
   return {
     MARCA_TEMPORAL: new Date().toLocaleString('es-CO'),
-    CODIGO_AGENDAMIENTO: document.getElementById('codigoAgenda')?.dataset?.aplicado || '',
+    CODIGO_AGENDAMIENTO: document.getElementById('codigoAgenda')?.value || '',
     CORREO: get('correo'),
     NOMBRE_FUNCIONARIO: get('nombreFuncionario') || get('nombreFuncionarioLibre'),
     AREA_LIDERA: get('area'),
@@ -2440,7 +2440,7 @@ function aplicarPrellenado() {
   if (d.otros_funcionarios && d.otros_funcionarios.trim()) {
     setVal('otrosFuncionarios', d.otros_funcionarios);
   }
-  document.getElementById('codigoAgenda').dataset.aplicado = _datosAgendados.codigo;
+  document.getElementById('codigoAgenda').value = _datosAgendados.codigo;
 
   // Ocultar lookup, mostrar formulario desde paso 1
   document.getElementById('secLookup').style.display = 'none';
