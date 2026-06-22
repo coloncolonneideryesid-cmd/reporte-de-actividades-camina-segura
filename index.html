@@ -428,8 +428,8 @@ textarea { resize: vertical; min-height: 80px; }
     <div class="section-header" style="background:var(--amarillo-l);border-bottom:1px solid #F5CBA7">
       <div class="section-icon" style="background:var(--amarillo);font-size:18px">🔑</div>
       <div>
-        <div class="section-title">¿Tienes código de agendamiento?</div>
-        <div class="section-sub">Escríbelo y el formulario se pre-llena solo</div>
+        <div class="section-title">Código de agendamiento (obligatorio)</div>
+        <div class="section-sub">Escríbelo y pulsa <b>Buscar</b>. Sin un código válido el reporte no se puede enviar.</div>
       </div>
     </div>
     <div class="section-body">
@@ -453,16 +453,11 @@ textarea { resize: vertical; min-height: 80px; }
           style="margin-top:10px;width:100%;padding:10px;background:var(--verde);color:white;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer">
           ✅ Sí, usar estos datos y continuar
         </button>
-        <button type="button" onclick="ignorarPrellenado()"
-          style="margin-top:6px;width:100%;padding:8px;background:none;border:1px solid var(--borde);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;color:var(--gris3)">
-          No tengo código / llenar manualmente
-        </button>
       </div>
-      <div style="margin-top:10px">
-        <button type="button" onclick="ignorarPrellenado()"
-          style="background:none;border:none;font-size:12px;color:var(--gris3);cursor:pointer;padding:0;text-decoration:underline">
-          No tengo código — llenar el formulario manualmente
-        </button>
+      <div style="margin-top:10px;font-size:11.5px;color:var(--gris3);line-height:1.6">
+        ¿No te llegó el código? Lo recibe quien agendó la actividad en el correo de
+        confirmación de <b>Agendamiento de Actividades en Territorio</b>. Revisa la
+        bandeja de entrada (y spam) o solicítalo a quien hizo el agendamiento.
       </div>
     </div>
   </div>
@@ -2014,14 +2009,39 @@ function collectData() {
 // SUBMIT — envío robusto a Google Apps Script
 // ══════════════════════════════════════════════
 async function submitForm() {
-  const sheetUrl = SCRIPT_URL_REPORTE;
-  const data     = collectData();
-  data.FOTOS_BASE64 = fotosArray.map(f => f.dataUrl);
-  data.N_FOTOS = fotosArray.length;
+  // ── 🔒 CANDADO DE CÓDIGO ──────────────────────────────
+  // No se envía nada si no hay un código de agendamiento VÁLIDO y verificado.
+  const codigoActual = (document.getElementById('codigoAgenda')?.value || '').trim().toUpperCase();
+  if (!_datosAgendados || !_datosAgendados.codigo ||
+      codigoActual !== String(_datosAgendados.codigo).trim().toUpperCase()) {
+    bloquearPorCodigo();
+    return;
+  }
 
   document.getElementById('spinner').classList.add('visible');
   document.getElementById('btnSubmit').disabled = true;
   document.getElementById('errorMsg').style.display = 'none';
+
+  // Re-verificar contra el servidor que el código sigue vigente justo antes de enviar
+  try {
+    const chk = await fetch(`${SCRIPT_URL_AGENDAMIENTO}?codigo=${encodeURIComponent(codigoActual)}`,
+                            { method: 'GET', mode: 'cors' });
+    const chkData = await chk.json();
+    if (!chkData || chkData.status !== 'ok') {
+      document.getElementById('spinner').classList.remove('visible');
+      bloquearPorCodigo('El código ya no figura en el sistema de agendamiento. Verifícalo de nuevo.');
+      return;
+    }
+  } catch (e) {
+    // Si la red falla aquí, NO bloqueamos por falso negativo:
+    // el backend (doPost) hará la validación definitiva y rechazará si no existe.
+    console.warn('No se pudo re-verificar el código (se delega al backend):', e);
+  }
+
+  const sheetUrl = SCRIPT_URL_REPORTE;
+  const data     = collectData();
+  data.FOTOS_BASE64 = fotosArray.map(f => f.dataUrl);
+  data.N_FOTOS = fotosArray.length;
 
   const payload = JSON.stringify(data);
   console.log('Payload size: ~' + Math.round(payload.length/1024) + ' KB | Fotos: ' + fotosArray.length);
@@ -2060,7 +2080,8 @@ function resetForm() {
   document.getElementById('secLookup').style.display = 'block';
   document.getElementById('lookupPreview').style.display = 'none';
   document.getElementById('lookupStatus').style.display = 'none';
-  document.getElementById('codigoAgenda').value = '';
+  const _inpCodReset = document.getElementById('codigoAgenda');
+  if (_inpCodReset) { _inpCodReset.value = ''; _inpCodReset.readOnly = false; _inpCodReset.style.opacity = '1'; }
   fotosArray = [];
   renderFotos();
   _datosAgendados = null;
@@ -2303,7 +2324,13 @@ function aplicarPrellenado() {
   handleLineaEstr();
 
   if (d.otros_funcionarios && d.otros_funcionarios.trim()) setVal('otrosFuncionarios', d.otros_funcionarios);
-  document.getElementById('codigoAgenda').value = _datosAgendados.codigo;
+  const inpCod = document.getElementById('codigoAgenda');
+  if (inpCod) {
+    inpCod.value = _datosAgendados.codigo;
+    inpCod.readOnly = true;            // queda fijo: solo un código verificado puede enviarse
+    inpCod.style.opacity = '0.85';
+    inpCod.title = 'Código verificado — para cambiarlo, recarga el formulario';
+  }
 
   document.getElementById('secLookup').style.display = 'none';
   currentStep = 1;
@@ -2317,9 +2344,24 @@ function aplicarPrellenado() {
 }
 
 function ignorarPrellenado() {
-  document.getElementById('secLookup').style.display = 'none';
-  currentStep = 1;
-  updateProgress();
+  // El código es OBLIGATORIO: ya no se permite continuar sin él.
+  mostrarStatus('🔒 El código de agendamiento es obligatorio. Escríbelo y pulsa “Buscar” para continuar.', 'warning');
+}
+
+// Bloquea el envío y devuelve al usuario al buscador de código.
+function bloquearPorCodigo(msgExtra) {
+  document.getElementById('spinner')?.classList.remove('visible');
+  const btn = document.getElementById('btnSubmit');
+  if (btn) btn.disabled = false;
+  const errEl = document.getElementById('errorMsg');
+  if (errEl) {
+    errEl.style.display = 'block';
+    errEl.innerHTML = '<b>🔒 Reporte bloqueado:</b> Debes validar un <b>código de agendamiento</b> válido antes de enviar. '
+      + (msgExtra || 'Vuelve al inicio, escribe el código que te llegó al correo y pulsa “Buscar”.');
+  }
+  const lookup = document.getElementById('secLookup');
+  if (lookup) lookup.style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function setVal(id, val) {
