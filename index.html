@@ -2075,23 +2075,62 @@ function showSuccess() {
 }
 
 function resetForm() {
+  // ── FIX: Ocultar pantalla de éxito (antes quedaba superpuesta al formulario) ──
+  document.getElementById('successScreen').classList.remove('visible');
+  const actaC = document.getElementById('actaContainer');
+  if (actaC) actaC.style.display = 'none';
+
+  // Restaurar formulario y navegación
   document.getElementById('mainForm').reset();
   document.getElementById('mainForm').style.display = 'block';
   document.querySelectorAll('.nav-btns').forEach(el => el.style.display = 'flex');
+
+  // Restaurar sección de búsqueda de código
   document.getElementById('secLookup').style.display = 'block';
   document.getElementById('lookupPreview').style.display = 'none';
   document.getElementById('lookupStatus').style.display = 'none';
+
+  // Limpiar código de agendamiento y desbloquear input
   const _inpCodReset = document.getElementById('codigoAgenda');
   if (_inpCodReset) { _inpCodReset.value = ''; _inpCodReset.readOnly = false; _inpCodReset.style.opacity = '1'; }
+
+  // Limpiar fotos
   fotosArray = [];
   renderFotos();
+
+  // Limpiar estado de datos agendados (CRÍTICO para que el siguiente envío funcione)
   _datosAgendados = null;
+
+  // Limpiar estados PISCCJ e indicadores
   Object.keys(indState).forEach(k => delete indState[k]);
   Object.keys(jerState).forEach(k => delete jerState[k]);
+
+  // Limpiar selecciones visuales: chips, radios, indicadores
   document.querySelectorAll('.chip.selected').forEach(c => c.classList.remove('selected'));
   document.querySelectorAll('.opt-item.selected').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('.ind-item.checked').forEach(it => it.classList.remove('checked'));
+
+  // ── FIX: Resetear campos condicionales y subsecciones ──
+  // Ocultar subsecciones que se abrieron dinámicamente
+  document.querySelectorAll('.subsection.visible').forEach(s => s.classList.remove('visible'));
+  // Ocultar selectores de funcionario por área (func-seg, func-js, etc.)
+  document.querySelectorAll('[id^="func-"]').forEach(el => el.style.display = 'none');
+
+  // Limpiar mensajes de error previos
+  const errEl = document.getElementById('errorMsg');
+  if (errEl) errEl.style.display = 'none';
+
+  // Rehabilitar botón de envío
+  const btnSub = document.getElementById('btnSubmit');
+  if (btnSub) btnSub.disabled = false;
+
+  // Eliminar banners de pre-llenado que pudieran quedar
+  document.querySelectorAll('.main-wrap > div[style*="var(--verde-l)"]').forEach(b => b.remove());
+
+  // Volver al paso 1 y scroll arriba
   currentStep = 1;
   updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ══════════════════════════════════════════════
